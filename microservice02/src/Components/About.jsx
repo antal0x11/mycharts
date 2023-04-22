@@ -25,7 +25,9 @@ function About () {
                 >
                     At myCharts we have one mission, to provide you with quality charts
                     so you can describe, explain, demonstrate and analyze your data with
-                    no extra effort.
+                    no extra effort.So, what are you waiting for?
+                    <Link to={"/"} className={"text-blue-500"}> Select a chart type</Link> and
+                    create effortless charts with myCharts.
                 </p>
 
                 <h2
@@ -163,8 +165,8 @@ function About () {
 
             <div className={"w-auto h-1/4 text-center mb-12 mt-4"}>
                 <Link
-                    to={"#addGithub"}
-                    className={"text-xl font-bold hover:text-blue-500 mb-8"}>
+                    to={"https://github.com/ntua/SaaS23-44"}
+                    className={"text-xl font-bold text-blue-500 hover:text-blue-300 mb-8"}>
                     Check out our Github Repository
                 </Link>
             </div>
