@@ -34,9 +34,13 @@ def bar_label_chart(data_source : str, user_id : str, chart_date : str, title : 
     bottom = np.zeros(len(x_categories))
     fig, ax = plt.subplots()
 
+    colors = ["#BAE0BB","#EABDBD", "#C3B9E9"] # NOTE add more colors or use random_hex_color(), current max is 3
+    color_index = 0
+
     for _it, _item_count in obj_counts.items():
-        p = ax.bar(x_categories, _item_count, width, label=_it, bottom=bottom)
+        p = ax.bar(x_categories, _item_count, width, label=_it, bottom=bottom, color=colors[color_index])
         bottom += _item_count
+        color_index = color_index + 1 if color_index < 3 else 0 
 
         ax.bar_label(p, label_type='center')
 
@@ -166,7 +170,7 @@ def scatter_plot(data_source : str, chart_title : str, user_id : str, chart_id :
 
 
 def random_hex_color() -> str: #generate a random color for scatter plot woth legend
-    return '#' + ''.join([random.choice('0123456789ABCDE') for _it in range(6)])
+    return '#FF' + ''.join([random.choice('0123456789ABCDE') for _it in range(4)]) #NOTE just add FF for light colors, len is 6
 
 
 def random_chart_id() -> str: # chart id format ABCDE-12345, 5 letters and 5 digits seperated with -
