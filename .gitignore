@@ -31,3 +31,9 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+/microservice01/charts/png
+/microservice01/data_generator
+/microservice01/charts/svg
+/microservice01/charts/html
+/microservice01/charts/pdf
+

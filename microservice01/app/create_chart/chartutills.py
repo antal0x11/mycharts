@@ -41,6 +41,7 @@ def bar_label_chart(data_source : str, user_id : str, chart_date : str, title : 
         ax.bar_label(p, label_type='center')
 
     ax.set_title(title)
+    ax.grid(True)
     ax.legend()
 
     try:
@@ -83,6 +84,7 @@ def simple_plot(data_source : str, chart_title : str, x_axis_title : str, y_axis
 
     fig, ax = plt.subplots()
     ax.plot(x,y)
+    ax.grid(True)
 
     ax.set( xlabel=x_axis_title, ylabel=y_axis_title, title=chart_title)
 
@@ -137,6 +139,7 @@ def scatter_plot(data_source : str, chart_title : str, user_id : str, chart_id :
         color_index = color_index + 1 if color_index < len(colors) else 0
         
     ax.set(title=chart_title)
+    ax.grid(True)
     ax.legend(loc='upper right')
     
     try:

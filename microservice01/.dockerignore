@@ -3,3 +3,4 @@ __pycache__
 /sample_json
 /csv_prototypes
 Dockerfile
+/data_generator

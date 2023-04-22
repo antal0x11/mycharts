@@ -1,5 +1,5 @@
 {
-    "title": "Initial plot",
-    "x_title": "x bar title",
-    "y_title": "y bar title"
+    "title": "Simple plot Example",
+    "x_title": "Angle(rad)",
+    "y_title": "sin(x)"
 }

@@ -56,7 +56,7 @@ def json_properties_evaluation(properties_pathname : str, plot_type : str) -> di
     else:
         return {} # return an empty dictionary in case properties are incorrect
 
-def csv_properties_evaluation(csv_data_file : str, plot_type : str) -> bool: #TODO
+def csv_properties_evaluation(csv_data_file : str, plot_type : str) -> bool: #TODO add status codes
     
     if plot_type not in ['simple_plot', 'bar_label', 'scatter_plot_with_legend']:
         return False
@@ -77,11 +77,14 @@ def csv_properties_evaluation(csv_data_file : str, plot_type : str) -> bool: #TO
             return False
         
         for _item in data.loc[:,'x'].to_list():
-            if not isinstance(_item,int):
+            if not isinstance(_item,int) and not isinstance(_item,float):
+                print(_item)
+                print("im here 1")
                 return False
 
         for _item in data.loc[:,'y'].to_list():
-            if not isinstance(_item,int):
+            if not isinstance(_item,int) and not isinstance(_item,float):
+                print("im here 2")
                 return False 
             
     elif plot_type == 'bar_label':
@@ -98,7 +101,7 @@ def csv_properties_evaluation(csv_data_file : str, plot_type : str) -> bool: #TO
                         return False
             else:
                 for _it in data.loc[:,_item].to_list(): # if a value is not given in a column but other are in column its nan so it fails
-                    if not isinstance(_it,int): # TODO Maybe add real numbers too
+                    if not isinstance(_it,int) and not isinstance(_it,float):
                         return False
         
     elif plot_type == 'scatter_plot_with_legend': # TODO issue when csv is invalid, more values in a row than the atributes specified in first row
@@ -121,7 +124,7 @@ def csv_properties_evaluation(csv_data_file : str, plot_type : str) -> bool: #TO
         
         for _item in first_row:
             for _it in data.loc[:,_item].to_list():
-                if not isinstance(_it,int):
+                if not isinstance(_it,int) and not isinstance(_it,float):
                     return False
 
     else:
