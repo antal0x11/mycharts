@@ -40,7 +40,7 @@ function Homepage() {
             <img
                 src={myCharts}
                 className={"bg-fixed block mx-auto mb-4"}
-                alt={"myChartsLog"}/>
+                alt={"myChartsLogo"}/>
 
             <div
                 className={"grid grid-cols-1 sm:grid-cols-3 justify-items-center"}>

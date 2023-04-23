@@ -9,7 +9,7 @@ function BarChartInstructor({hideChart, title}) {
                 Instructions for Creating a {title} Chart
             </h2>
             <ul
-                className={"list-disc italic pl-4 text-justify text-ellipsis whitespace-normal break-keep tracking-wide"}>
+                className={"list-disc pl-4 text-justify text-ellipsis whitespace-normal break-keep tracking-wide"}>
                 <li className={"pt-2"}> Login with your Google Account. </li>
                 <li className={"pt-2"}> Create a csv file with your data. </li>
                 <li className={"pt-2"}> Create a json file with your chart attributes. </li>
