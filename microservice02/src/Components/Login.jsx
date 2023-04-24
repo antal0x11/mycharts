@@ -3,6 +3,11 @@ import jwt_decode from "jwt-decode";
 import myCharts from "../assets/myCharts.png";
 import {Navigate} from "react-router-dom";
 
+/*
+    Login Component is used to sign in the client with google.
+    Username or email and password will not be created.
+ */
+
 function Login() {
 
     const [clientSignedIn,setClientSignedIn] = useState(false)
@@ -11,11 +16,6 @@ function Login() {
         const cleanClientData = jwt_decode(response.credential)
         console.log(cleanClientData);
         setClientSignedIn(true);
-    }
-
-    function handleLogout(response) {
-        //document.cookie = "g_state=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"
-        //TODO handle logout
     }
 
     useEffect(() => {

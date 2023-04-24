@@ -1,10 +1,11 @@
+import MenuBar from "./MenuBar.jsx";
+
 function CreditsPage() {
     return  (
-        <h1
-            className={"text-2xl text-center"}
-        >
-            Buy Credit page is under Construction
-        </h1>
+        <div>
+            <MenuBar />
+            <h1 className={"text-xl text-center"}>Credit Page Is Under Construction</h1>
+        </div>
     )
 }
 

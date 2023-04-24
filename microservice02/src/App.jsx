@@ -6,6 +6,7 @@ import CreateChart from "./Components/CreateChart.jsx";
 import Dashboard from "./Components/Dashboard.jsx";
 import CreditsPage from "./Components/CreditsPage.jsx";
 import Page404 from "./ErrorComponents/Page404.jsx";
+import MyAccount from "./Components/MyAccount.jsx";
 
 function App() {
 
@@ -18,6 +19,7 @@ function App() {
                 <Route path={"/create-chart"} element={<CreateChart />} />
                 <Route path={"/buy-credit"} element={<CreditsPage />} />
                 <Route path={"/about"} element={<About />} />
+                <Route path={"/myaccount"} element={<MyAccount />} />
                 <Route path={"*"} element={<Page404 />} />
             </Routes>
         </BrowserRouter>
