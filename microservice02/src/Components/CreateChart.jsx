@@ -5,7 +5,7 @@ function CreateChart() {
     return (
         <div>
 
-            <MenuBar />
+            <MenuBar page={"create-chart"}/>
             <h1 className={"text-xl text-center"}>Create Chart Page Is Under Construction</h1>
             <div className={"grid grid-cols-20  grid-rows-10 mx-auto box-border border-4 max-w-2xl mt-8"}>
 

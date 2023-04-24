@@ -6,11 +6,12 @@ import {useEffect, useState} from "react";
     navigate.
  */
 
-function MenuBar () {
+function MenuBar ({page}) {
 
 
     const [smallScreenMenuIsHidden,setSmallScreeMenuIsHidden] = useState(false);
     const [clientSignedOut, setclientSignedOut] = useState(false);
+    const [markPage,setMarkPage] = useState(page);
 
     useEffect(() => {
         google.accounts.id.initialize({
@@ -18,9 +19,9 @@ function MenuBar () {
         });
     },[]);
     function handleLogout(response) { //TODO fix:just sign out dont revoke
-       // google.accounts.id.revoke(import.meta.env.VITE_TEST_EMAIL, done => {
-        //    console.log('consent revoked');
-        //});
+        google.accounts.id.revoke(import.meta.env.VITE_TEST_EMAIL, done => {
+            console.log('consent revoked');
+        });
         setclientSignedOut(true);
     }
 
@@ -33,12 +34,12 @@ function MenuBar () {
 
 
     return (
-        <nav className={"bg-blue-400 w-full"}>
+        <nav className={"bg-orange-100 w-full"}>
             <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
                 <div className="relative flex h-16 items-center justify-between">
                     <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
                         <button type="button"
-                                className="inline-flex items-center justify-center rounded-md p-2 text-white hover:bg-blue-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+                                className="inline-flex items-center justify-center rounded-md p-2 text-black hover:bg-orange-200 hover:text-black"
                                 aria-controls="mobile-menu"
                                 aria-expanded="false"
                                 onClick={handleMenuDisplay}>
@@ -58,42 +59,82 @@ function MenuBar () {
                     </div>
                 </div>
 
-                <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start bg-blue-400">
+                <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start bg-orange-100">
                     <div className="hidden sm:ml-6 sm:block">
                         <div className="flex space-x-4">
 
-                            <Link
-                                to={"/dashboard"}
-                                className="hover:bg-white hover:text-black text-white px-3 py-2 text-sm font-medium">
-                                My Charts
-                            </Link>
+                            {markPage === "dashboard"  &&
+                                <Link
+                                    to={"/dashboard"}
+                                    className="bg-white hover:text-black text-black px-3 py-2 text-sm font-medium">
+                                    My Charts
+                                </Link>
+                            }
 
-                            <Link
-                                to={"/create-chart"}
-                                className="text-white hover:bg-white hover:text-black px-3 py-2 text-sm font-medium">
-                                Create Chart
-                            </Link>
+                            {markPage !== "dashboard"  &&
+                                <Link
+                                    to={"/dashboard"}
+                                    className="hover:bg-white hover:text-black text-black px-3 py-2 text-sm font-medium">
+                                    My Charts
+                                </Link>
+                            }
 
-                            <Link
-                                to={"/myaccount"}
-                                className="hover:bg-white hover:text-black text-white px-3 py-2 text-sm font-medium">
-                                My Account
-                            </Link>
+                            {markPage === "create-chart" &&
+                                <Link
+                                    to={"/create-chart"}
+                                    className="bg-white hover:text-black px-3 py-2 text-sm font-medium">
+                                    Create Chart
+                                </Link>
+                            }
 
-                            <Link
-                                to={"/buy-credit"}
-                                className="hover:bg-white hover:text-black text-white px-3 py-2 text-sm font-medium">
-                                Buy Credits
-                            </Link>
+                            {markPage !== "create-chart" &&
+                                <Link
+                                    to={"/create-chart"}
+                                    className="text-black hover:bg-white hover:text-black px-3 py-2 text-sm font-medium">
+                                    Create Chart
+                                </Link>
+                            }
+
+                            {markPage === "myaccount" &&
+                                <Link
+                                    to={"/myaccount"}
+                                    className="bg-white hover:text-black text-black px-3 py-2 text-sm font-medium">
+                                    My Account
+                                </Link>
+                            }
+
+                            {markPage !== "myaccount" &&
+                                <Link
+                                    to={"/myaccount"}
+                                    className="hover:bg-white hover:text-black text-black px-3 py-2 text-sm font-medium">
+                                    My Account
+                                </Link>
+                            }
+
+                            { markPage === "buy-credits" &&
+                                <Link
+                                    to={"/buy-credit"}
+                                    className="bg-white hover:text-black text-black px-3 py-2 text-sm font-medium">
+                                    Buy Credits
+                                </Link>
+                            }
+
+                            { markPage !== "buy-credits" &&
+                                <Link
+                                    to={"/buy-credit"}
+                                    className="hover:bg-white hover:text-black text-black px-3 py-2 text-sm font-medium">
+                                    Buy Credits
+                                </Link>
+                            }
 
                             <Link
                                 to={"/about"}
-                                className="hover:bg-white hover:text-black text-white px-3 py-2 text-sm font-medium">
+                                className="hover:bg-white hover:text-black text-black px-3 py-2 text-sm font-medium">
                                 About
                             </Link>
 
                             <button
-                                className="hover:bg-white hover:text-black text-white px-3 py-2 text-sm font-medium"
+                                className="hover:bg-white hover:text-black text-black px-3 py-2 text-sm font-medium"
                                 onClick={handleLogout}>
                                 Sign Out
                             </button>
@@ -107,32 +148,32 @@ function MenuBar () {
                     <div className="space-y-1 px-2 pb-3 pt-2">
 
                         <Link to={"/dashboard"}
-                            className="text-white hover:bg-white hover:text-black block rounded-md px-3 py-2 text-base font-medium">
+                            className="text-black hover:bg-white hover:text-black block rounded-md px-3 py-2 text-base font-medium">
                             My Charts
                         </Link>
 
                         <Link to={"/create-chart"}
-                              className="text-white hover:bg-white hover:text-black block rounded-md px-3 py-2 text-base font-medium">
+                              className="text-black hover:bg-white hover:text-black block rounded-md px-3 py-2 text-base font-medium">
                             Create Chart
                         </Link>
 
                         <Link to={"/myaccount"}
-                            className="text-white hover:bg-white hover:text-black block rounded-md px-3 py-2 text-base font-medium">
+                            className="text-black hover:bg-white hover:text-black block rounded-md px-3 py-2 text-base font-medium">
                             My Account
                         </Link>
 
                         <Link to={"/buy-credit"}
-                            className="text-white hover:bg-white hover:text-black block rounded-md px-3 py-2 text-base font-medium">
+                            className="text-black hover:bg-white hover:text-black block rounded-md px-3 py-2 text-base font-medium">
                             Buy Credits
                         </Link>
 
                         <Link to={"/about"}
-                            className="text-white hover:bg-white hover:text-black block rounded-md px-3 py-2 text-base font-medium">
+                            className="text-black hover:bg-white hover:text-black block rounded-md px-3 py-2 text-base font-medium">
                             About
                         </Link>
 
                         <span
-                            className="text-white hover:bg-white hover:text-black block hover:cursor-pointer rounded-md px-3 py-2 text-base font-medium"
+                            className="text-black hover:bg-white hover:text-black block hover:cursor-pointer rounded-md px-3 py-2 text-base font-medium"
                             onClick={handleLogout}>
                             Sign Out
                         </span>

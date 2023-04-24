@@ -4,6 +4,8 @@ import {Link} from "react-router-dom";
 
 function About () {
 
+    //TODO make tables prettier
+
     return (
         <div className={"place-self-center"}>
             <img src={myCharts} className={"bg-fixed block mx-auto"} alt={"myChartsLog"}/>
