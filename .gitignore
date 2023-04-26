@@ -36,4 +36,5 @@ dist-ssr
 /microservice01/charts/svg
 /microservice01/charts/html
 /microservice01/charts/pdf
+/microservice02/src/assets/person.png
 .env
