@@ -4,8 +4,6 @@ import {Link} from "react-router-dom";
 
 function About () {
 
-    //TODO make tables prettier
-
     return (
         <div className={"place-self-center"}>
             <img src={myCharts} className={"bg-fixed block mx-auto"} alt={"myChartsLog"}/>
@@ -38,113 +36,121 @@ function About () {
                     Pricing
                 </h2>
 
-                <table className={"border-2 border-collapse border-solid w-3/4 place-self-center"} >
+                <table className={"border-2 border-collapse border-amber-950 border-collapse w-3/4 place-self-center text-center"} >
                     <caption
                         className={"caption-bottom text-center text-sm"}
                     >
                         *Charts Pricing Tax Not Included
                     </caption>
                     <thead>
-                        <th>Chart Type</th>
-                        <th>Price</th>
-                        <th>Available Charts</th>
+                        <tr className={"bg-orange-100"}>
+                            <th className={"border p-2 border-black"}>Chart Type</th>
+                            <th className={"border p-2 border-black"}>Price</th>
+                            <th className={"border p-2 border-black"}>Available Charts</th>
+                        </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td className={"text-center px-5"}>Simple Plot</td>
-                            <td className={"text-center px-5"}>$0.99</td>
-                            <td className={"text-center px-5"}>5</td>
+                        <tr className={"bg-yellow-100"}>
+                            <td className={"border p-2 border-black"}>Simple Plot</td>
+                            <td className={"border p-2 border-black"}>$0.99</td>
+                            <td className={"border p-2 border-black"}>5</td>
                         </tr>
-                        <tr>
-                            <td className={"text-center px-5"}>Simple Plot</td>
-                            <td className={"text-center px-5"}>$1.99</td>
-                            <td className={"text-center px-5"}>10</td>
+                        <tr className={"bg-yellow-100"}>
+                            <td className={"border p-2 border-black"}>Simple Plot</td>
+                            <td className={"border p-2 border-black"}>$1.99</td>
+                            <td className={"border p-2 border-black"}>10</td>
                         </tr>
-                        <tr>
-                            <td className={"text-center px-5"}>Simple Plot</td>
-                            <td className={"text-center px-5"}>$3.99</td>
-                            <td className={"text-center px-5"}>20</td>
+                        <tr className={"bg-yellow-100"}>
+                            <td className={"border p-2 border-black"}>Simple Plot</td>
+                            <td className={"border p-2 border-black"}>$3.99</td>
+                            <td className={"border p-2 border-black"}>20</td>
                         </tr>
-                        <tr>
-                            <td className={"text-center px-5"}>Simple Plot</td>
-                            <td className={"text-center px-5"}>$4.99</td>
-                            <td className={"text-center px-5"}>50</td>
+                        <tr className={"bg-yellow-100"}>
+                            <td className={"border p-2 border-black"}>Simple Plot</td>
+                            <td className={"border p-2 border-black"}>$4.99</td>
+                            <td className={"border p-2 border-black"}>50</td>
                         </tr>
 
                     </tbody>
                 </table>
 
-                <table className={"border-2 border-collapse border-solid mt-5 w-3/4 place-self-center"}>
+                <table className={"border-2 border-collapse border-amber-950 border-collapse w-3/4 place-self-center text-center mt-5"}>
                     <caption
                         className={"caption-bottom text-center text-sm"}
                     >
                         *Charts Pricing Tax Not Included
                     </caption>
                     <thead>
-                        <th>Chart Type</th>
-                        <th>Price</th>
-                        <th>Available Charts</th>
+                        <tr className={"bg-orange-100"}>
+                            <th className={"border p-2 border-amber-950"}>Chart Type</th>
+                            <th className={"border p-2 border-amber-950"}>Price</th>
+                            <th className={"border p-2 border-amber-950"}>Available Charts</th>
+                        </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td className={"text-center px-7"}>Bar Label</td>
-                            <td className={"text-center px-7"}>$1.29</td>
-                            <td className={"text-center px-7"}>5</td>
-                        </tr>
-                        <tr>
-                            <td className={"text-center px-7"}>Bar Label</td>
-                            <td className={"text-center px-7"}>$2.29</td>
-                            <td className={"text-center px-7"}>10</td>
-                        </tr>
-                        <tr>
-                            <td className={"text-center px-7"}>Bar Label</td>
-                            <td className={"text-center px-7"}>$3.29</td>
-                            <td className={"text-center px-7"}>20</td>
+                        <tr className={"bg-yellow-100"}>
+                            <td className={"border p-2 border-amber-950"}>Bar Label</td>
+                            <td className={"border p-2 border-amber-950"}>$1.29</td>
+                            <td className={"border p-2 border-amber-950"}>5</td>
                         </tr>
 
-                        <tr>
-                            <td className={"text-center px-7"}>Bar Label</td>
-                            <td className={"text-center px-7"}>$6.99</td>
-                            <td className={"text-center px-7"}>50</td>
+                        <tr className={"bg-yellow-100"}>
+                            <td className={"border p-2 border-amber-950"}>Bar Label</td>
+                            <td className={"border p-2 border-amber-950"}>$2.29</td>
+                            <td className={"border p-2 border-amber-950"}>10</td>
+                        </tr>
+
+                        <tr className={"bg-yellow-100"}>
+                            <td className={"border p-2 border-amber-950"}>Bar Label</td>
+                            <td className={"border p-2 border-amber-950"}>$3.29</td>
+                            <td className={"border p-2 border-amber-950"}>20</td>
+                        </tr>
+
+                        <tr className={"bg-yellow-100"}>
+                            <td className={"border p-2 border-amber-950"}>Bar Label</td>
+                            <td className={"border p-2 border-amber-950"}>$6.99</td>
+                            <td className={"border p-2 border-amber-950"}>50</td>
                         </tr>
                     </tbody>
                 </table>
 
-                <table className={"border-2 border-collapse border-solid mt-5 w-3/4 place-self-center"}>
+                <table className={"border-2 border-collapse border-amber-950 border-collapse w-3/4 place-self-center text-center mt-5"}>
                     <caption
                         className={"caption-bottom text-center text-sm"}
                     >
                         *Charts Pricing Tax Not Included
                     </caption>
                     <thead>
-                        <th>Chart Type</th>
-                        <th>Price</th>
-                        <th>Available Charts</th>
+                        <tr className={"bg-orange-100"}>
+                            <th className={"border p-2 border-amber-950"}>Chart Type</th>
+                            <th className={"border p-2 border-amber-950"}>Price</th>
+                            <th className={"border p-2 border-amber-950"}>Available Charts</th>
+                        </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <td className={"text-center px-5"}>Scatter Plot</td>
-                        <td className={"text-center px-5"}>$2.29</td>
-                        <td className={"text-center px-5"}>5</td>
-                    </tr>
+                        <tr className={"bg-yellow-100"}>
+                            <td className={"border p-2 border-amber-950"}>Scatter Plot</td>
+                            <td className={"border p-2 border-amber-950"}>$2.29</td>
+                            <td className={"border p-2 border-amber-950"}>5</td>
+                        </tr>
 
-                    <tr>
-                        <td className={"text-center px-5"}>Scatter Plot</td>
-                        <td className={"text-center px-5"}>$3.29</td>
-                        <td className={"text-center px-5"}>10</td>
-                    </tr>
+                        <tr className={"bg-yellow-100"}>
+                            <td className={"border p-2 border-amber-950"}>Scatter Plot</td>
+                            <td className={"border p-2 border-amber-950"}>$3.29</td>
+                            <td className={"border p-2 border-amber-950"}>10</td>
+                        </tr>
 
-                    <tr>
-                        <td className={"text-center px-5"}>Scatter Plot</td>
-                        <td className={"text-center px-5"}>$4.29</td>
-                        <td className={"text-center px-5"}>20</td>
-                    </tr>
+                        <tr className={"bg-yellow-100"}>
+                            <td className={"border p-2 border-amber-950"}>Scatter Plot</td>
+                            <td className={"border p-2 border-amber-950"}>$4.29</td>
+                            <td className={"border p-2 border-amber-950"}>20</td>
+                        </tr>
 
-                    <tr>
-                        <td className={"text-center px-5"}>Scatter Plot</td>
-                        <td className={"text-center px-5"}>$8.99</td>
-                        <td className={"text-center px-5"}>50</td>
-                    </tr>
+                        <tr className={"bg-yellow-100"}>
+                            <td className={"border p-2 border-amber-950"}>Scatter Plot</td>
+                            <td className={"border p-2 border-amber-950"}>$8.99</td>
+                            <td className={"border p-2 border-amber-950"}>50</td>
+                        </tr>
                     </tbody>
                 </table>
 
