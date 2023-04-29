@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'com.example'
-version = '0.0.1-SNAPSHOT'
+version = '1.0.0'
 sourceCompatibility = '17'
 
 repositories {
@@ -21,6 +21,10 @@ dependencies {
 
     implementation 'javax.validation:validation-api:2.0.1.Final'
 
+}
+
+jar {
+    archiveBaseName = 'myChartsClients-1.0.0'
 }
 
 tasks.named('test') {
