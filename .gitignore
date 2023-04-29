@@ -44,10 +44,9 @@ dist-ssr
 
 .gradle
 build/
-gradle/wrapper/gradle-wrapper.jar
+!gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
-*.jar
 
 ### STS ###
 .apt_generated
@@ -61,8 +60,6 @@ bin/
 !**/src/main/**/bin/
 !**/src/test/**/bin/
 
-microservice03/src/main/resources/application.properties
-microservice03/gradle/wrapper/gradle-wrapper.jar
 
 ### IntelliJ IDEA ###
 .idea
