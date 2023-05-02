@@ -6,16 +6,19 @@ import com.example.requestmodel.UpdateChartsRequest;
 import com.example.responsemodel.ClientResponseInfo;
 import com.example.responsemodel.UpdateResponseInfo;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Optional;
 
-@RestController //TODO validate Request Body
+@RestController
+@Validated
 public class UpdateCharts {
 
     @Autowired
@@ -23,7 +26,7 @@ public class UpdateCharts {
 
     @PostMapping(value = "/api/client/update/charts", consumes = "application/json", produces = "application/json")
     @Transactional
-    public ResponseEntity<Object> updateCharts(@RequestBody UpdateChartsRequest updCharts) {
+    public ResponseEntity<Object> updateCharts(@Valid @RequestBody UpdateChartsRequest updCharts) {
 
         Optional<ClientDB> client = clientRepository.findById(updCharts.email);
 

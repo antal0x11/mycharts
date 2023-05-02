@@ -6,16 +6,19 @@ import com.example.requestmodel.UpdateCreditRequest;
 import com.example.responsemodel.ClientResponseInfo;
 import com.example.responsemodel.UpdateResponseInfo;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Optional;
 
-@RestController //TODO validate request body
+@RestController
+@Validated
 public class UpdateCredit {
 
     @Autowired
@@ -23,7 +26,7 @@ public class UpdateCredit {
 
     @PostMapping(path="/api/client/update/credit", consumes = "application/json", produces = "application/json")
     @Transactional
-    public ResponseEntity<Object> updateCredit(@RequestBody UpdateCreditRequest request) {
+    public ResponseEntity<Object> updateCredit(@Valid @RequestBody UpdateCreditRequest request) {
 
         Optional<ClientDB> client = clientRepository.findById(request.email);
 

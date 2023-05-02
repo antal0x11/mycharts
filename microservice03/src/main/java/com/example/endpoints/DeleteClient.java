@@ -3,21 +3,24 @@ package com.example.endpoints;
 import com.example.mychartsmodel.ClientRepository;
 import com.example.requestmodel.DeleteClientRequest;
 import com.example.responsemodel.ClientResponseInfo;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController //TODO validate request body
+@RestController
+@Validated
 public class DeleteClient {
 
     @Autowired
     private ClientRepository clientRepository;
 
     @PostMapping(path = "/api/client/delete", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<Object> handleClientDelete(@RequestBody DeleteClientRequest request) {
+    public ResponseEntity<Object> handleClientDelete(@Valid @RequestBody DeleteClientRequest request) {
 
         if (!clientRepository.existsById(request.email)) {
 

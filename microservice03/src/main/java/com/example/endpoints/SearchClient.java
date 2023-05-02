@@ -6,9 +6,11 @@ import com.example.mychartsmodel.ClientRepository;
 import com.example.requestmodel.SearchClientRequest;
 import com.example.responsemodel.ClientResponseInfo;
 import com.example.responsemodel.SearchClientResponse;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,13 +18,14 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Optional;
 
 @RestController //TODO validate request body
+@Validated
 public class SearchClient {
 
     @Autowired
     private ClientRepository clientRepository;
 
     @PostMapping(path = "/api/client/search", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<Object> handleSearchClient(@RequestBody SearchClientRequest request) {
+    public ResponseEntity<Object> handleSearchClient(@Valid @RequestBody SearchClientRequest request) {
 
         Optional<ClientDB> client = clientRepository.findById(request.email);
 
