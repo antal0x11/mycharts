@@ -127,11 +127,21 @@ function MenuBar ({page}) {
                                 </Link>
                             }
 
-                            <Link
-                                to={"/about"}
-                                className="hover:bg-white hover:text-black text-black px-3 py-2 text-sm font-medium">
-                                About
-                            </Link>
+                            { markPage === "/about" &&
+                                <Link
+                                    to={"/about"}
+                                    className="bg-white hover:text-black text-black px-3 py-2 text-sm font-medium">
+                                    About
+                                </Link>
+                            }
+
+                            { markPage !== "/about" &&
+                                <Link
+                                    to={"/about"}
+                                    className="hover:bg-white hover:text-black text-black px-3 py-2 text-sm font-medium">
+                                    About
+                                </Link>
+                            }
 
                             <button
                                 className="hover:bg-white hover:text-black text-black px-3 py-2 text-sm font-medium"

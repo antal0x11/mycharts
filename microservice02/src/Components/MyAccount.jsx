@@ -26,7 +26,7 @@ function MyAccount() {
         <div>
             <MenuBar page={"myaccount"}/>
 
-            <div className={"container bg-gray-100 mx-auto rounded h-auto w-4/12 mt-8"}>
+            <div className={"container bg-gray-100 mx-auto rounded h-auto w-4/12 mt-8 border-2 border-black shadow-xl shadow-rose-50 shadow-opacity-50"}>
                 <span className={"p-4 flex justify-items-center"}>
                     <img
                         src={person}
@@ -73,7 +73,7 @@ function MyAccount() {
                     </svg>
 
                     <span className={"text-lg font-medium"}>Available Charts: </span>
-                    <span className={"text-lg font-medium hover:text-3xl"}>{availableCharts}</span>
+                    <span className={"text-lg font-medium hover:text-3xl hover:cursor-pointer"}>{availableCharts}</span>
                 </div>
 
                 <div className={"p-2 flex align-items space-x-2"}>

@@ -1,11 +1,15 @@
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import myCharts from "../assets/myCharts.png";
 import {Link} from "react-router-dom";
+import MenuBar from "./MenuBar.jsx";
 
 function About () {
 
+    const [authenticated,setAuthenticated] = useState(false);
+
     return (
         <div className={"place-self-center"}>
+            {authenticated && <MenuBar page={"/about"}/>}
             <img src={myCharts} className={"bg-fixed block mx-auto"} alt={"myChartsLog"}/>
             <h1
                 className={"text-4xl font-thin text-center mb-4 mt-4"}
