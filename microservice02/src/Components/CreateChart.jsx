@@ -1,32 +1,124 @@
 import ScatterPlot from "../assets/ScatterPlot.png";
 import MenuBar from "./MenuBar.jsx";
+import {useState} from "react";
+import myCharts from "../assets/myCharts.png";
 
 function CreateChart() {
+
+    const [chartTitle,setChartTitle] = useState(undefined);
+    const [chartExtension,setChartExtension] = useState(undefined);
+    const [chartPlotType,setChartPlotType] = useState(undefined);
+    const [simplePlotTypeXAxisTitle,setSimplePlotTypeXAxisTitle] = useState(undefined);
+    const [simplePlotTypeYAxisTitle,setSimplePlotTypeYAxisTitle] = useState(undefined);
+    const [simplePlotPropsVisible,setSimplePlotPropsVisible] = useState(false);
+    const [btnProps,setBtnProps] = useState(false);
+
+    function handleSimplePlotProps(event) {
+        setChartPlotType(event.target.value);
+        (event.target.value === "SimplePlot") ? setSimplePlotPropsVisible(true) : setSimplePlotPropsVisible(false);
+    }
+
+    function handleBtnProps() {
+        //TODO add validation for props
+    }
+
+    const handleChartTitleChange = (event) => {
+        setChartTitle(event.target.value);
+    }
+
+    const handleChartExtension = (event) => {
+        setChartExtension(event.target.value);
+    }
+
+    const handleSimplePlotTypeXAxisTitle = (event) => {
+        setSimplePlotTypeXAxisTitle(event.target.value);
+    }
+
+    const handleSimplePlotTypeYAxisTitle = (event) => {
+        setSimplePlotTypeYAxisTitle(event.target.value);
+    }
+
+
+
+
     return (
         <div>
 
             <MenuBar page={"create-chart"}/>
-            <h1 className={"text-xl text-center"}>Create Chart Page Is Under Construction</h1>
-            <div className={"grid grid-cols-20  grid-rows-10 mx-auto box-border border-4 max-w-2xl mt-8"}>
 
-                <img
-                    src={ScatterPlot}
-                    alt={"Prototypes"}
-                    className={"col-start-5 col-end-10"}/>
-
-                <div id={"left-arrow"} className={"hover:cursor-pointer grid-cols-10 grid-rows-5"}>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
-                    </svg>
+            <div className={"box-border border-2 rounded-md border-black mx-auto h-fit w-96 mt-4"}>
+                <img src={myCharts}
+                     alt={"myCharts logo"}
+                     className={"bg-fixed"}/>
+                <div className={"p-4"}>
+                    <input
+                        className="px-4 py-2 border-2 border-black focus:outline-none rounded-md w-full"
+                        type={"text"}
+                        placeholder="Chart Title"
+                        onChange={handleChartTitleChange}
+                        required/>
                 </div>
 
-                <div id={"right-arrow"} className={"hover:cursor-pointer w-3.5 w-3.5 absolute inset-y-2/3 right-1/4"}>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-                    </svg>
+                <div className={"p-4"}>
+                    <select className={"block w-full px-4 py-2 rounded-md border-2 border-black focus:outline-none hover:cursor-pointer bg-white"}
+                            onChange={handleChartExtension}>
+                        <option defaultValue={"Select File Format"}>Select File Format</option>
+                        <option value={"png"}>png</option>
+                        <option value={"html"}>html</option>
+                        <option value={"svg"}>svg</option>
+                        <option value={"pdf"}>pdf</option>
+                    </select>
+                </div>
+
+                <div className={"p-4"}>
+                    <select
+                        className={"block w-full px-4 py-2 rounded-md border-2 border-black focus:outline-none hover:cursor-pointer bg-white"}
+                        onChange={handleSimplePlotProps}>
+                        <option defaultValue={"Select File Format"}>Select Chart Type</option>
+                        <option value={"SimplePlot"}>Simple Plot</option>
+                        <option value={"BarPlotWithLegend"}>Bar Plot With Labels</option>
+                        <option value={"ScatterPlot"}>Scatter Plot</option>
+                    </select>
+                </div>
+
+                {simplePlotPropsVisible &&
+                    <div className={"p-4"}>
+                        <input
+                            className="px-4 py-2 border-2 border-black focus:outline-none rounded-md w-full"
+                            type={"text"}
+                            placeholder="x Axis Title"
+                            onChange={handleSimplePlotTypeXAxisTitle}
+                            required/>
+                    </div>
+                }
+
+                {simplePlotPropsVisible &&
+
+                    <div className={"p-4"}>
+                        <input
+                            className="px-4 py-2 border-2 border-black focus:outline-none rounded-md w-full"
+                            type={"text"}
+                            placeholder="y Axis Title"
+                            onChange={handleSimplePlotTypeYAxisTitle}
+                            required/>
+                    </div>
+                }
+
+                <div className={"p-4 hover:cursor-pointer"}>
+                    <div className={"border-2 border-dashed border-black px-4 py-6 bg-orange-50 justify-center rounded-md"}>
+                        <span className={"text-center text-md"}>Drag and Drop your data file to upload or select one</span>
+                        <input
+                            type={"file"}
+                            className={"hover:cursor-pointer hidden"} />
+                    </div>
+                </div>
+
+                <div className={"p-4"}>
+                    <button className={"border-2 border-black rounded-lg p-4 w-36 h-14"}>Submit</button>
                 </div>
 
             </div>
+
         </div>
     )
 }

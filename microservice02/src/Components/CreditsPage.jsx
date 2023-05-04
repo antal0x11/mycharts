@@ -11,7 +11,7 @@ function CreditsPage() {
         <div>
             <MenuBar page={"buy-credits"}/>
 
-            <h1 className={"text-center text-2xl p-4 italic"}>myCharts available packages</h1>
+            <h1 className={"text-center text-2xl p-4 italic"}>If it's time to fill up the tank, we got you!</h1>
 
             <div className={"p-2 flex align-items space-x-2"}>
                     <span>
