@@ -1,28 +1,46 @@
 import {Link, Navigate} from "react-router-dom";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 
 /*
     MenuBar Component creates a menu bar to help the authenticated client
     navigate.
  */
 
-function MenuBar ({page}) {
+function MenuBar ({page, clientEmail, setClientEmail}) {
 
 
     const [smallScreenMenuIsHidden,setSmallScreeMenuIsHidden] = useState(false);
-    const [clientSignedOut, setclientSignedOut] = useState(false);
     const [markPage,setMarkPage] = useState(page);
+    const [clientSignedOut, setClientSignedOut] = useState(false);
 
-    useEffect(() => {
-        google.accounts.id.initialize({
-            client_id: import.meta.env.VITE_GOOGLE_AUTHENTICATION
-        });
-    },[]);
-    function handleLogout(response) { //TODO fix:just sign out dont revoke
-        google.accounts.id.revoke(import.meta.env.VITE_TEST_EMAIL, done => {
+    // useEffect(() => {
+    //     google.accounts.id.initialize({
+    //         client_id: import.meta.env.VITE_GOOGLE_AUTHENTICATION
+    //     });
+    // },[]);
+    function handleLogout() { //TODO fix:just sign out dont revoke
+        google.accounts.id.revoke(import.meta.env.VITE_TEST_EMAIL, () => {
             console.log('consent revoked');
         });
-        setclientSignedOut(true);
+
+        google.accounts.id.disableAutoSelect();//TODO FIX ISSUE
+
+        fetch("http://localhost:9000/api/auth/signout", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                email: clientEmail
+            })
+        }).then(response => {
+            if(response.ok) {
+                setClientSignedOut(true);
+                setClientEmail(null);
+            }
+        }).catch( error => {
+            console.log(error);
+        })
     }
 
     function handleMenuDisplay() {

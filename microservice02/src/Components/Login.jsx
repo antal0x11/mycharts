@@ -4,18 +4,50 @@ import myCharts from "../assets/myCharts.png";
 import {Navigate} from "react-router-dom";
 
 /*
-    Login Component is used to sign in the client with google.
+    Login Component is used to sign in the client with Google.
     Username or email and password will not be created.
  */
 
-function Login() {
+function Login({clientEmail,setClientEmail}) {
 
-    const [clientSignedIn,setClientSignedIn] = useState(false)
+    const [clientSignedIn,setClientSignedIn] = useState(false);
 
     function handleCallBackResponse(response) {
         const cleanClientData = jwt_decode(response.credential)
-        console.log(cleanClientData);
+        //console.log(cleanClientData);
+        console.log(cleanClientData.email);
+        fetch(import.meta.env.VITE_CLIENT_SESSION_CREATE, {
+            method: "POST",
+            headers: {
+                "Content-Type" : "application/json"
+            },
+            body : JSON.stringify({email : cleanClientData.email})
+        })
+            .then(data => console.log(data))
+            .catch(error => console.log(error))
+        setClientEmail(cleanClientData.email);
         setClientSignedIn(true);
+    }
+
+    function handleClientStatus() {
+        console.log(clientEmail);
+        if (clientEmail !== null) {
+            fetch(import.meta.env.VITE_CLIENT_SESSION_STATUS, {
+                method: "POST",
+                headers: {
+                    "Content-Type" : "application/json"
+                },
+                body : JSON.stringify({email : clientEmail})
+            })
+                .then(response => {
+                    if (response.ok) {
+                        setClientSignedIn(true);
+                    }
+                })
+                .catch( error => {
+                    console.log(error);
+                })
+        }
     }
 
     useEffect(() => {
@@ -34,6 +66,8 @@ function Login() {
                 width : "250"
             }
         )
+
+        handleClientStatus();
     },[]);
 
 

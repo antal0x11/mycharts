@@ -8,43 +8,76 @@ import ScatterPlot from "../assets/ScatterPlot.png";
     select and download a specific one or just find a table containing information
     about them.
  */
-function Dashboard() {
+function Dashboard({clientEmail,setClientEmail}) {
 
-    const [previewChart,setPreviewChart] = useState(true);
+    const [previewChart, setPreviewChart] = useState(true);
+    const [clientSignedIn,setClientSignedIn] = useState(0); //0 -> signed in, 2 -> signed out
 
-    return (
-        <div>
-            <MenuBar page={"dashboard"}/>
+    const handleAuth = () => {
+        console.log(clientEmail);
+        fetch("http://localhost:9000/api/auth/status", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                email: clientEmail
+            })
+        }).then(response => {
+            if(response.ok) {
+                setClientSignedIn(0);
+            } else {
+                setClientSignedIn(2);
+            }
+        }).catch( error => {
+            console.log(error);
+        })
+    }
 
-            <div className={"w-full bg-blue-50"}>
-                <img
-                    src={myCharts}
-                    alt={"myCharts"}
-                    className={"bg-auto mx-auto w-96"}
-                 />
+    useEffect(() => {
+        handleAuth();
 
-                <div className={"flex space-x-4"}>
-                    <h1 className={"p-2 text-lg font-medium"}>Welcome someone@gmail.com</h1>
-                    <h1 className={"p-2 text-lg font-medium"}>Credits : 10</h1>
+    },[]);
+
+
+
+    if (clientSignedIn === 0) {
+
+        return (
+
+            <div>
+                <MenuBar page={"dashboard"} clientEmail={clientEmail} setClientEmail={setClientEmail}/>
+
+                <div className={"w-full bg-blue-50"}>
+                    <img
+                        src={myCharts}
+                        alt={"myCharts"}
+                        className={"bg-auto mx-auto w-96"}
+                    />
+
+                    <div className={"flex space-x-4"}>
+                        <h1 className={"p-2 text-lg font-medium"}>Welcome someone@gmail.com</h1>
+                        <h1 className={"p-2 text-lg font-medium"}>Credits : 10</h1>
+                    </div>
                 </div>
-            </div>
 
-            <div className={"mx-auto grid grid-cols-1 sm:grid-cols-2 justify-items-center flex space-x-4"}>
-                <table className={"auto border-2 border-black mt-4 mb-8 border-collapse border-spacing-4 text-center"}>
-                    <caption className={"caption-top mb-2 text-lg font-medium"}>
-                        My Charts
-                    </caption>
-                    <thead>
+                <div className={"mx-auto grid grid-cols-1 sm:grid-cols-2 justify-items-center flex space-x-4"}>
+                    <table
+                        className={"auto border-2 border-black mt-4 mb-8 border-collapse border-spacing-4 text-center"}>
+                        <caption className={"caption-top mb-2 text-lg font-medium"}>
+                            My Charts
+                        </caption>
+                        <thead>
                         <tr className={"bg-orange-100"}>
                             <th className={"border p-4 border-black"}>Type</th>
                             <th className={"border p-4 border-black"}>Chart Name</th>
                             <th className={"border p-4 border-black"}>Created on</th>
                             <th className={"border p-4 border-black"}>Download</th>
                         </tr>
-                    </thead>
-                    <tbody>
+                        </thead>
+                        <tbody>
 
-                    {/* example data */}
+                        {/* example data */}
                         <tr>
                             <td className={"border p-4 border-black"}>Simple Plot</td>
                             <td className={"border p-4 border-black hover:cursor-pointer"}>Example Simple Plot</td>
@@ -101,24 +134,39 @@ function Dashboard() {
                             <td className={"border p-4 border-black"}>png, pdf, svg, html</td>
                         </tr>
 
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
 
-                <div className={"box-content h-fit w-fit border-2 border-black mt-12"}>
-                    <h1 className={"text-center mt-2"}>Chart Preview</h1> {/* TODO add conditional rendering if chart is not selected*/}
-                    {previewChart &&
-                        <img src={ScatterPlot}
-                             alt={"client chart"}
-                            className={"mx-auto"}   />
-                    }
+                    <div className={"box-content h-fit w-fit border-2 border-black mt-12"}>
+                        <h1 className={"text-center mt-2"}>Chart
+                            Preview</h1> {/* TODO add conditional rendering if chart is not selected*/}
+                        {previewChart &&
+                            <img src={ScatterPlot}
+                                 alt={"client chart"}
+                                 className={"mx-auto"}/>
+                        }
 
-                    {!previewChart &&
-                        <h1 className={"text-lg font-medium self-center"}>Select a chart to preview</h1>
-                    }
+                        {!previewChart &&
+                            <h1 className={"text-lg font-medium self-center"}>Select a chart to preview</h1>
+                        }
+                    </div>
                 </div>
+
             </div>
-        </div>
-    )
+        );
+    } else if (clientSignedIn === 2) {
+        return (
+            <div>
+                <h1 className={"text-lg"}>Unauthorised</h1>
+            </div>
+        )
+    } else {
+        return (
+            <div>
+
+            </div>
+        )
+    }
 }
 
 export default Dashboard;

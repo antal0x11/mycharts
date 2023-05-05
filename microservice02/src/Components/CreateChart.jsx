@@ -1,10 +1,10 @@
 import ScatterPlot from "../assets/ScatterPlot.png";
 import MenuBar from "./MenuBar.jsx";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import myCharts from "../assets/myCharts.png";
 import Notification from "./Notification.jsx";
 
-function CreateChart() {
+function CreateChart({clientEmail, setClientEmail}) {
 
     const [chartTitle,setChartTitle] = useState(undefined);
     const [chartExtension,setChartExtension] = useState(undefined);
@@ -12,10 +12,35 @@ function CreateChart() {
     const [simplePlotTypeXAxisTitle,setSimplePlotTypeXAxisTitle] = useState(undefined);
     const [simplePlotTypeYAxisTitle,setSimplePlotTypeYAxisTitle] = useState(undefined);
     const [simplePlotPropsVisible,setSimplePlotPropsVisible] = useState(false);
-    const [btnProps,setBtnProps] = useState(false);
     const [dataFile,setDataFile] = useState(null);
     const [notification,setNotification] = useState(0);
     const [visibleNotification, setVisibleNotification] = useState(false);
+    const [clientSignedIn,setClientSignedIn] = useState(0);
+
+    const handleAuth = () => {
+        console.log(clientEmail);
+        fetch("http://localhost:9000/api/auth/status", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                email: clientEmail
+            })
+        }).then(response => {
+            if(response.ok) {
+                setClientSignedIn(0);
+            } else {
+                setClientSignedIn(2);
+            }
+        }).catch( error => {
+            console.log(error);
+        })
+    }
+
+    useEffect(() => {
+        handleAuth();
+    }, []);
 
     function handleSimplePlotProps(event) {
         setChartPlotType(event.target.value);
@@ -106,7 +131,7 @@ function CreateChart() {
                     setNotification(6) // 6 -> data input has mistakes
                 }
             })
-            .catch(error => {
+            .catch(() => {
                 setVisibleNotification(true);
                 setNotification(7); // 7 -> if upload service is unavailable
             } );
@@ -114,152 +139,161 @@ function CreateChart() {
 
 
 
+    if (clientSignedIn === 0) {
+        return (
+            <div>
 
-    return (
-        <div>
+                <MenuBar page={"create-chart"} clientEmail={clientEmail} setClientEmail={setClientEmail}/>
 
-            <MenuBar page={"create-chart"}/>
+                {visibleNotification && notification === 1 &&
+                    <Notification notificationInfo={"errors"}
+                                  notificationTitle={"Chart Title"}
+                                  notificationMsg={"Chart title can't be empty."}
+                                  setVisibleNotification={setVisibleNotification}/>
+                }
 
-            {visibleNotification && notification === 1 &&
-                <Notification notificationInfo={"errors"}
-                              notificationTitle={"Chart Title"}
-                              notificationMsg={"Chart title can't be empty."}
-                              setVisibleNotification={setVisibleNotification}/>
-            }
+                {visibleNotification && notification === 2 &&
+                    <Notification notificationInfo={"errors"}
+                                  notificationTitle={"Chart Export Format"}
+                                  notificationMsg={"Chart export format can be png, pdf, svg or html."}
+                                  setVisibleNotification={setVisibleNotification}/>
+                }
 
-            {visibleNotification && notification === 2 &&
-                <Notification notificationInfo={"errors"}
-                              notificationTitle={"Chart Export Format"}
-                              notificationMsg={"Chart export format can be png, pdf, svg or html."}
-                              setVisibleNotification={setVisibleNotification}/>
-            }
+                {visibleNotification && notification === 3 &&
+                    <Notification notificationInfo={"errors"}
+                                  notificationTitle={"Chart Plot Type"}
+                                  notificationMsg={"Chart Plot is invalid."}
+                                  setVisibleNotification={setVisibleNotification}/>
+                }
 
-            {visibleNotification && notification === 3 &&
-                <Notification notificationInfo={"errors"}
-                              notificationTitle={"Chart Plot Type"}
-                              notificationMsg={"Chart Plot is invalid."}
-                              setVisibleNotification={setVisibleNotification}/>
-            }
+                {visibleNotification && notification === 4 &&
+                    <Notification notificationInfo={"errors"}
+                                  notificationTitle={"Simple Plot Axis Titles Are Missing"}
+                                  notificationMsg={"You have to name xAxis and yAxis."}
+                                  setVisibleNotification={setVisibleNotification}/>
+                }
 
-            {visibleNotification && notification === 4 &&
-                <Notification notificationInfo={"errors"}
-                              notificationTitle={"Simple Plot Axis Titles Are Missing"}
-                              notificationMsg={"You have to name xAxis and yAxis."}
-                              setVisibleNotification={setVisibleNotification}/>
-            }
+                {visibleNotification && notification === 5 &&
+                    <Notification notificationInfo={"success"}
+                                  notificationTitle={"Data Upload"}
+                                  notificationMsg={"Your data have been successfully uploaded."}
+                                  setVisibleNotification={setVisibleNotification}/>
+                }
 
-            {visibleNotification && notification === 5 &&
-                <Notification notificationInfo={"success"}
-                              notificationTitle={"Data Upload"}
-                              notificationMsg={"Your data have been successfully uploaded."}
-                              setVisibleNotification={setVisibleNotification}/>
-            }
+                {visibleNotification && notification === 6 &&
+                    <Notification notificationInfo={"errors"}
+                                  notificationTitle={"Data Upload"}
+                                  notificationMsg={"Your file contains errors."}
+                                  setVisibleNotification={setVisibleNotification}/>
+                }
 
-            {visibleNotification && notification === 6 &&
-                <Notification notificationInfo={"errors"}
-                              notificationTitle={"Data Upload"}
-                              notificationMsg={"Your file contains errors."}
-                              setVisibleNotification={setVisibleNotification}/>
-            }
+                {visibleNotification && notification === 7 &&
+                    <Notification notificationInfo={"info"}
+                                  notificationTitle={"Data Upload Unavailable"}
+                                  notificationMsg={"Upload Service is currently unavailable."}
+                                  setVisibleNotification={setVisibleNotification}/>
+                }
 
-            {visibleNotification && notification === 7 &&
-                <Notification notificationInfo={"info"}
-                              notificationTitle={"Data Upload Unavailable"}
-                              notificationMsg={"Upload Service is currently unavailable."}
-                              setVisibleNotification={setVisibleNotification}/>
-            }
-
-            {visibleNotification && notification === 8 &&
-                <Notification notificationInfo={"errors"}
-                              notificationTitle={"File Upload"}
-                              notificationMsg={"You have to upload a file with your data."}
-                              setVisibleNotification={setVisibleNotification}/>
-            }
-
-
+                {visibleNotification && notification === 8 &&
+                    <Notification notificationInfo={"errors"}
+                                  notificationTitle={"File Upload"}
+                                  notificationMsg={"You have to upload a file with your data."}
+                                  setVisibleNotification={setVisibleNotification}/>
+                }
 
 
-            <div className={"box-border border-2 rounded-md border-black mx-auto h-fit w-96 mt-4"}>
-                <img src={myCharts}
-                     alt={"myCharts logo"}
-                     className={"bg-fixed"}/>
-                <div className={"p-4"}>
-                    <input
-                        className="px-4 py-2 border-2 border-black focus:outline-none rounded-md w-full"
-                        type={"text"}
-                        placeholder="Chart Title"
-                        onChange={handleChartTitleChange}
-                        required/>
-                </div>
 
-                <div className={"p-4"}>
-                    <select className={"block w-full px-4 py-2 rounded-md border-2 border-black focus:outline-none hover:cursor-pointer bg-white"}
-                            onChange={handleChartExtension}>
-                        <option defaultValue={"Select File Format"}>Select File Format</option>
-                        <option value={"png"}>png</option>
-                        <option value={"html"}>html</option>
-                        <option value={"svg"}>svg</option>
-                        <option value={"pdf"}>pdf</option>
-                    </select>
-                </div>
 
-                <div className={"p-4"}>
-                    <select
-                        className={"block w-full px-4 py-2 rounded-md border-2 border-black focus:outline-none hover:cursor-pointer bg-white"}
-                        onChange={handleSimplePlotProps}>
-                        <option defaultValue={"Select File Format"}>Select Chart Type</option>
-                        <option value={"SimplePlot"}>Simple Plot</option>
-                        <option value={"BarPlotWithLegend"}>Bar Plot With Labels</option>
-                        <option value={"ScatterPlot"}>Scatter Plot</option>
-                    </select>
-                </div>
-
-                {simplePlotPropsVisible &&
+                <div className={"box-border border-2 rounded-md border-black mx-auto h-fit w-96 mt-4"}>
+                    <img src={myCharts}
+                        alt={"myCharts logo"}
+                         className={"bg-fixed"}/>
                     <div className={"p-4"}>
                         <input
                             className="px-4 py-2 border-2 border-black focus:outline-none rounded-md w-full"
                             type={"text"}
-                            placeholder="x Axis Title"
-                            onChange={handleSimplePlotTypeXAxisTitle}
+                            placeholder="Chart Title"
+                            onChange={handleChartTitleChange}
                             required/>
                     </div>
-                }
-
-                {simplePlotPropsVisible &&
 
                     <div className={"p-4"}>
-                        <input
-                            className="px-4 py-2 border-2 border-black focus:outline-none rounded-md w-full"
-                            type={"text"}
-                            placeholder="y Axis Title"
-                            onChange={handleSimplePlotTypeYAxisTitle}
-                            required/>
+                        <select className={"block w-full px-4 py-2 rounded-md border-2 border-black focus:outline-none hover:cursor-pointer bg-white"}
+                                onChange={handleChartExtension}>
+                            <option defaultValue={"Select File Format"}>Select File Format</option>
+                            <option value={"png"}>png</option>
+                            <option value={"html"}>html</option>
+                            <option value={"svg"}>svg</option>
+                            <option value={"pdf"}>pdf</option>
+                        </select>
                     </div>
-                }
 
-                <form encType={"multipart/form-data"} onSubmit={handleChartSubmit}>
-                    <div className={"p-4 hover:cursor-pointer"}>
-                        <div className={"border-2 border-dashed border-black px-4 py-6 bg-orange-50 justify-center rounded-md"}>
-                            <span className={"text-center text-md"}>Drag and Drop your data file to upload or select one</span>
+                    <div className={"p-4"}>
+                        <select
+                            className={"block w-full px-4 py-2 rounded-md border-2 border-black focus:outline-none hover:cursor-pointer bg-white"}
+                            onChange={handleSimplePlotProps}>
+                            <option defaultValue={"Select File Format"}>Select Chart Type</option>
+                            <option value={"SimplePlot"}>Simple Plot</option>
+                            <option value={"BarPlotWithLegend"}>Bar Plot With Labels</option>
+                            <option value={"ScatterPlot"}>Scatter Plot</option>
+                        </select>
+                    </div>
+
+                    {simplePlotPropsVisible &&
+                        <div className={"p-4"}>
                             <input
-                                id={"t"}
-                                type={"file"}
-                                className={"hover:cursor-pointer"}
-                                accept={".csv,.xlsx"}
-                                onChange={handleFileInput}
-                                />
+                                className="px-4 py-2 border-2 border-black focus:outline-none rounded-md w-full"
+                                type={"text"}
+                                placeholder="x Axis Title"
+                                onChange={handleSimplePlotTypeXAxisTitle}
+                                required/>
                         </div>
-                    </div>
+                    }
 
-                    <div className={"p-4"}>
-                        <button className={"border-2 border-black rounded-lg p-4 w-36 h-14"}>Submit</button>
-                    </div>
-                </form>
+                    {simplePlotPropsVisible &&
+
+                        <div className={"p-4"}>
+                            <input
+                                className="px-4 py-2 border-2 border-black focus:outline-none rounded-md w-full"
+                                type={"text"}
+                                placeholder="y Axis Title"
+                                onChange={handleSimplePlotTypeYAxisTitle}
+                                required/>
+                        </div>
+                    }
+
+                    <form encType={"multipart/form-data"} onSubmit={handleChartSubmit}>
+                        <div className={"p-4 hover:cursor-pointer"}>
+                            <div className={"border-2 border-dashed border-black px-4 py-6 bg-orange-50 justify-center rounded-md"}>
+                                <span className={"text-center text-md"}>Drag and Drop your data file to upload or select one</span>
+                                <input
+                                    id={"t"}
+                                    type={"file"}
+                                    className={"hover:cursor-pointer"}
+                                    accept={".csv,.xlsx"}
+                                    onChange={handleFileInput}
+                                    />
+                            </div>
+                        </div>
+
+                        <div className={"p-4"}>
+                            <button className={"border-2 border-black rounded-lg p-4 w-36 h-14"}>Submit</button>
+                        </div>
+                    </form>
+
+                </div>
 
             </div>
-
-        </div>
-    )
+        );
+    } else if (clientSignedIn === 2){
+        return (
+            <h1 className={"text-lg"}>Unauthorised</h1>
+        );
+    } else {
+        return (
+            <div></div>
+        )
+    }
 }
 
 export default CreateChart;
