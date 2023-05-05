@@ -1,0 +1,21 @@
+{
+  "name": "microservice07",
+  "version": "1.0.0",
+  "description": "## (name)",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index.js",
+    "build": "node index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "figlet": "^1.6.0",
+    "nodemon": "^2.0.22",
+    "redis": "^4.6.6"
+  }
+}
