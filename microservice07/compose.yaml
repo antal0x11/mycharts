@@ -1,0 +1,26 @@
+services:
+  authserver:
+    build: 
+      context: .
+      dockerfile: Dockerfile.authserver
+    ports:
+      - "9000:9000"
+    depends_on:
+      - redis
+    networks:
+      mycharts-network:
+        ipv4_address: 10.0.1.14
+
+  redis:
+    build:
+      context: .
+      dockerfile: Dockerfile.redis
+    networks:
+      mycharts-network:
+        ipv4_address: 10.0.1.15
+
+
+networks:
+  mycharts-network:
+    external: true
+    name: mycharts-network

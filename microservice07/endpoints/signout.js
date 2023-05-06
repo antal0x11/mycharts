@@ -7,17 +7,19 @@ function signout(req, res, next) {
     res.type("application/json");
     
     const client = redis.createClient({
-        host : process.env.REDIS_HOST,
-        port : process.env.REDIS_PORT
+        socket: {
+            host : process.env.REDIS_HOST,
+            port : process.env.REDIS_PORT
+        }
     });
 
     client.connect()
     .then(() => {
-        client.del(req.body.email)
+        client.del(req.body.token)
         .then(() => {
             res.status(200).json(
                 {
-                    "client" : req.body.email,
+                    "token" : req.body.token,
                     "status" : "deactivated"
                 }
             );

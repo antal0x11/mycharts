@@ -5,15 +5,17 @@ const redis = require("redis");
 function status(req, res, next) {
 
     res.type("application/json");
-    
+
     const client = redis.createClient({
-        host : process.env.REDIS_HOST,
-        port : process.env.REDIS_PORT
+        socket: {
+            host : process.env.REDIS_HOST,
+            port : process.env.REDIS_PORT
+        }
     });
 
     client.connect()
     .then(() => {
-        client.get(req.body.email)
+        client.get(req.body.token)
         .then((data) => {
             if (data === null) {
                 res.status(404).json(
