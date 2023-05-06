@@ -2,35 +2,39 @@ import {useEffect, useState} from "react";
 import MenuBar from "./MenuBar.jsx";
 import myCharts from "../assets/myCharts.png";
 import ScatterPlot from "../assets/ScatterPlot.png";
+import Unauthorized401 from "../ErrorComponents/Unauthorized401.jsx";
 
 /*
     Dashboard Component is the component, where client can preview his/her charts,
     select and download a specific one or just find a table containing information
     about them.
  */
-function Dashboard({clientEmail,setClientEmail}) {
+function Dashboard() {
 
     const [previewChart, setPreviewChart] = useState(true);
     const [clientSignedIn,setClientSignedIn] = useState(0); //0 -> signed in, 2 -> signed out
 
     const handleAuth = () => {
-        console.log(clientEmail);
-        fetch("http://localhost:9000/api/auth/status", {
+        const token = sessionStorage.getItem("token")
+        if (token === null) {
+            setClientSignedIn(2);
+            return;
+        }
+
+        fetch(import.meta.env.VITE_CLIENT_SESSION_STATUS, {
             method: "POST",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type" : "application/json"
             },
-            body: JSON.stringify({
-                email: clientEmail
-            })
+            body : JSON.stringify({token : token})
         }).then(response => {
-            if(response.ok) {
+            if (response.ok) {
                 setClientSignedIn(0);
             } else {
                 setClientSignedIn(2);
             }
-        }).catch( error => {
-            console.log(error);
+        }).catch(error => {
+            //TODO handle verification error
         })
     }
 
@@ -46,7 +50,7 @@ function Dashboard({clientEmail,setClientEmail}) {
         return (
 
             <div>
-                <MenuBar page={"dashboard"} clientEmail={clientEmail} setClientEmail={setClientEmail}/>
+                <MenuBar page={"dashboard"} />
 
                 <div className={"w-full bg-blue-50"}>
                     <img
@@ -156,9 +160,7 @@ function Dashboard({clientEmail,setClientEmail}) {
         );
     } else if (clientSignedIn === 2) {
         return (
-            <div>
-                <h1 className={"text-lg"}>Unauthorised</h1>
-            </div>
+            <Unauthorized401 />
         )
     } else {
         return (

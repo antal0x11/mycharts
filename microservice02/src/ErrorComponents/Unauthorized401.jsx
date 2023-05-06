@@ -1,8 +1,7 @@
-import {useEffect, useState} from "react";
 import myCharts from "../assets/myCharts.png";
+import {useEffect, useState} from "react";
 import {Navigate} from "react-router-dom";
-
-function Page404() {
+function Unauthorized401() {
 
     const [backHome,setBackHome] = useState(false);
     const [goSignIn,setGoSignIn] = useState(false);
@@ -25,9 +24,9 @@ function Page404() {
                  src={myCharts}
                  alt={"my charts logo"}
             />
-            <h1 className={"text-9xl"}>404</h1>
+            <h1 className={"text-9xl"}>401</h1>
             <p className={"text-4xl"}>
-                Looks like you lost your path.
+                You have to sign in in order to access this page.
             </p>
             <span>
                 <button className={"text-2xl border-2 rounded border-black p-4 mt-4 hover:shadow-lg hover:bg-sky-200"}
@@ -43,7 +42,7 @@ function Page404() {
             {backHome && <Navigate to={"/"} replace={true}/>}
             {goSignIn && <Navigate to={"/login"} replace={true}/>}
         </div>
-    );
+    )
 }
 
-export default Page404;
+export default Unauthorized401;

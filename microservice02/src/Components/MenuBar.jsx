@@ -6,41 +6,49 @@ import {useState} from "react";
     navigate.
  */
 
-function MenuBar ({page, clientEmail, setClientEmail}) {
+function MenuBar ({page}) {
 
 
     const [smallScreenMenuIsHidden,setSmallScreeMenuIsHidden] = useState(false);
     const [markPage,setMarkPage] = useState(page);
     const [clientSignedOut, setClientSignedOut] = useState(false);
 
-    // useEffect(() => {
-    //     google.accounts.id.initialize({
-    //         client_id: import.meta.env.VITE_GOOGLE_AUTHENTICATION
-    //     });
-    // },[]);
-    function handleLogout() { //TODO fix:just sign out dont revoke
-        google.accounts.id.revoke(import.meta.env.VITE_TEST_EMAIL, () => {
-            console.log('consent revoked');
+    async function handleLogout() {
+        /*google.accounts.id.initialize({
+            client_id: import.meta.env.VITE_GOOGLE_AUTHENTICATION
         });
 
-        google.accounts.id.disableAutoSelect();//TODO FIX ISSUE
+        google.accounts.id.revoke(import.meta.env.VITE_TEST_EMAIL, () => {
+            console.log('consent revoked'); //If i want to revoke access
+        });*/
 
-        fetch("http://localhost:9000/api/auth/signout", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                email: clientEmail
-            })
-        }).then(response => {
-            if(response.ok) {
+        google.accounts.id.disableAutoSelect();
+
+        const token = sessionStorage.getItem("token");
+        if (token === null) {
+            return;
+        }
+
+        try {
+            const response = await fetch(import.meta.env.VITE_CLIENT_SESSION_END, {
+                method: "POST",
+                headers: {
+                    "Content-Type" : "application/json"
+                },
+                body : JSON.stringify({token : token})
+            });
+
+            const authObj= await response.json();
+            if (response.ok) {
+                sessionStorage.clear();
                 setClientSignedOut(true);
-                setClientEmail(null);
             }
-        }).catch( error => {
+
+        } catch (error) {
+            //TODO handle error;
             console.log(error);
-        })
+        }
+
     }
 
     function handleMenuDisplay() {

@@ -7,6 +7,34 @@ function About () {
 
     const [authenticated,setAuthenticated] = useState(false);
 
+    const handleAuth = () => {
+        const token = sessionStorage.getItem("token")
+        if (token === null) {
+            setAuthenticated(false);
+            return;
+        }
+
+        fetch(import.meta.env.VITE_CLIENT_SESSION_STATUS, {
+            method: "POST",
+            headers: {
+                "Content-Type" : "application/json"
+            },
+            body : JSON.stringify({token : token})
+        }).then(response => {
+            if (response.ok) {
+                setAuthenticated(true);
+            } else {
+                setAuthenticated(false);
+            }
+        }).catch(error => {
+            //TODO handle verification error
+        })
+    }
+
+    useEffect(() => {
+        handleAuth();
+    },[]);
+
     return (
         <div className={"place-self-center"}>
             {authenticated && <MenuBar page={"/about"}/>}

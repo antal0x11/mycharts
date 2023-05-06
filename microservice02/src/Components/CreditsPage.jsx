@@ -1,7 +1,8 @@
 import MenuBar from "./MenuBar.jsx";
 import {useEffect, useState} from "react";
+import Unauthorized401 from "../ErrorComponents/Unauthorized401.jsx";
 
-function CreditsPage({clientEmail}) {
+function CreditsPage() {
 
     const [firstName,setFirstName] = useState("Lisa");
     const [lastName,setLastName] = useState("Blue");
@@ -9,23 +10,26 @@ function CreditsPage({clientEmail}) {
     const [clientSignedIn,setClientSignedIn] = useState(0);
 
     const handleAuth = () => {
-        console.log(clientEmail);
-        fetch("http://localhost:9000/api/auth/status", {
+        const token = sessionStorage.getItem("token")
+        if (token === null) {
+            setClientSignedIn(2);
+            return;
+        }
+
+        fetch(import.meta.env.VITE_CLIENT_SESSION_STATUS, {
             method: "POST",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type" : "application/json"
             },
-            body: JSON.stringify({
-                email: clientEmail
-            })
+            body : JSON.stringify({token : token})
         }).then(response => {
-            if(response.ok) {
+            if (response.ok) {
                 setClientSignedIn(0);
             } else {
                 setClientSignedIn(2);
             }
-        }).catch( error => {
-            console.log(error);
+        }).catch(error => {
+            //TODO handle verification error
         })
     }
 
@@ -80,7 +84,7 @@ function CreditsPage({clientEmail}) {
             </div>
         );
     } else if (clientSignedIn === 2){
-        return (<h1 className={"text-lg"}>Unauthorised</h1>);
+        return (<Unauthorized401 />);
     } else {
         return (
             <div></div>

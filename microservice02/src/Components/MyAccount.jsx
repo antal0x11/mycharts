@@ -1,8 +1,9 @@
 import MenuBar from "./MenuBar.jsx";
 import person from "../assets/person.png";
 import {useEffect, useState} from "react";
+import Unauthorized401 from "../ErrorComponents/Unauthorized401.jsx";
 
-function MyAccount({clientEmail}) {
+function MyAccount() {
 
     const [firstName,setFirstName] = useState("Lisa");
     const [lastName,setLastName] = useState("Blue");
@@ -13,23 +14,27 @@ function MyAccount({clientEmail}) {
     const [clientSignedIn,setClientSignedIn] = useState(0);
 
     const handleAuth = () => {
-        console.log(clientEmail);
-        fetch("http://localhost:9000/api/auth/status", {
+        const token = sessionStorage.getItem("token")
+        if (token === null) {
+            setClientSignedIn(2);
+            return;
+        }
+
+        fetch(import.meta.env.VITE_CLIENT_SESSION_STATUS, {
             method: "POST",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type" : "application/json"
             },
-            body: JSON.stringify({
-                email: clientEmail
-            })
+            body : JSON.stringify({token : token})
         }).then(response => {
-            if(response.ok) {
+            if (response.ok) {
                 setClientSignedIn(0);
             } else {
                 setClientSignedIn(2);
+                document.body.classList.remove("bg-orange-50");
             }
-        }).catch( error => {
-            console.log(error);
+        }).catch(error => {
+            //TODO handle verification error
         })
     }
 
@@ -123,7 +128,7 @@ function MyAccount({clientEmail}) {
         );
     } else if (clientSignedIn === 2){
         return (
-            <h1 className={"text-lg"}>Unauthorised</h1>
+            <Unauthorized401 />
         )
     } else {
         return (

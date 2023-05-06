@@ -3,8 +3,9 @@ import MenuBar from "./MenuBar.jsx";
 import {useEffect, useState} from "react";
 import myCharts from "../assets/myCharts.png";
 import Notification from "./Notification.jsx";
+import Unauthorized401 from "../ErrorComponents/Unauthorized401.jsx";
 
-function CreateChart({clientEmail, setClientEmail}) {
+function CreateChart() {
 
     const [chartTitle,setChartTitle] = useState(undefined);
     const [chartExtension,setChartExtension] = useState(undefined);
@@ -18,23 +19,26 @@ function CreateChart({clientEmail, setClientEmail}) {
     const [clientSignedIn,setClientSignedIn] = useState(0);
 
     const handleAuth = () => {
-        console.log(clientEmail);
-        fetch("http://localhost:9000/api/auth/status", {
+        const token = sessionStorage.getItem("token")
+        if (token === null) {
+            setClientSignedIn(2);
+            return;
+        }
+
+        fetch(import.meta.env.VITE_CLIENT_SESSION_STATUS, {
             method: "POST",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type" : "application/json"
             },
-            body: JSON.stringify({
-                email: clientEmail
-            })
+            body : JSON.stringify({token : token})
         }).then(response => {
-            if(response.ok) {
+            if (response.ok) {
                 setClientSignedIn(0);
             } else {
                 setClientSignedIn(2);
             }
-        }).catch( error => {
-            console.log(error);
+        }).catch(error => {
+            //TODO handle verification error
         })
     }
 
@@ -143,7 +147,7 @@ function CreateChart({clientEmail, setClientEmail}) {
         return (
             <div>
 
-                <MenuBar page={"create-chart"} clientEmail={clientEmail} setClientEmail={setClientEmail}/>
+                <MenuBar page={"create-chart"} />
 
                 {visibleNotification && notification === 1 &&
                     <Notification notificationInfo={"errors"}
@@ -287,7 +291,7 @@ function CreateChart({clientEmail, setClientEmail}) {
         );
     } else if (clientSignedIn === 2){
         return (
-            <h1 className={"text-lg"}>Unauthorised</h1>
+            <Unauthorized401 />
         );
     } else {
         return (

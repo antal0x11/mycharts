@@ -8,46 +8,52 @@ import {Navigate} from "react-router-dom";
     Username or email and password will not be created.
  */
 
-function Login({clientEmail,setClientEmail}) {
+function Login() {
 
     const [clientSignedIn,setClientSignedIn] = useState(false);
 
-    function handleCallBackResponse(response) {
+    async function handleCallBackResponse(response) {
         const cleanClientData = jwt_decode(response.credential)
-        //console.log(cleanClientData);
-        console.log(cleanClientData.email);
-        fetch(import.meta.env.VITE_CLIENT_SESSION_CREATE, {
-            method: "POST",
-            headers: {
-                "Content-Type" : "application/json"
-            },
-            body : JSON.stringify({email : cleanClientData.email})
-        })
-            .then(data => console.log(data))
-            .catch(error => console.log(error))
-        setClientEmail(cleanClientData.email);
-        setClientSignedIn(true);
-    }
-
-    function handleClientStatus() {
-        console.log(clientEmail);
-        if (clientEmail !== null) {
-            fetch(import.meta.env.VITE_CLIENT_SESSION_STATUS, {
+        const obj_req = {email : cleanClientData.email};
+        try {
+            const response = await fetch(import.meta.env.VITE_CLIENT_SESSION_CREATE, {
                 method: "POST",
                 headers: {
                     "Content-Type" : "application/json"
                 },
-                body : JSON.stringify({email : clientEmail})
-            })
-                .then(response => {
-                    if (response.ok) {
-                        setClientSignedIn(true);
-                    }
-                })
-                .catch( error => {
-                    console.log(error);
-                })
+                body : JSON.stringify(obj_req)
+            });
+
+            const authObj= await response.json();
+            setClientSignedIn(true);
+            sessionStorage.setItem("token",authObj.token);
+        } catch (error) {
+            console.log(error);
         }
+    }
+
+    function handleClientStatus() {
+        const token = sessionStorage.getItem("token");
+        if (token === null) {
+            setClientSignedIn(false);
+            return;
+        }
+
+        fetch(import.meta.env.VITE_CLIENT_SESSION_STATUS, {
+            method: "POST",
+            headers: {
+                "Content-Type" : "application/json"
+            },
+            body : JSON.stringify({token : token})
+        }).then(response => {
+            if (response.ok) {
+                setClientSignedIn(true);
+            } else {
+                setClientSignedIn(false);
+            }
+        }).catch(error => {
+            //TODO handle verification error
+        });
     }
 
     useEffect(() => {
