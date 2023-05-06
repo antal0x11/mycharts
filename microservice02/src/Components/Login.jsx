@@ -2,6 +2,7 @@ import {useEffect, useState} from "react";
 import jwt_decode from "jwt-decode";
 import myCharts from "../assets/myCharts.png";
 import {Navigate} from "react-router-dom";
+import Notification from "./Notification.jsx";
 
 /*
     Login Component is used to sign in the client with Google.
@@ -11,6 +12,8 @@ import {Navigate} from "react-router-dom";
 function Login() {
 
     const [clientSignedIn,setClientSignedIn] = useState(false);
+    const [serverFail,setServerFail] = useState(false);
+    const [visibleNotification, setVisibleNotification] = useState(false);
 
     async function handleCallBackResponse(response) {
         const cleanClientData = jwt_decode(response.credential)
@@ -28,7 +31,8 @@ function Login() {
             setClientSignedIn(true);
             sessionStorage.setItem("token",authObj.token);
         } catch (error) {
-            console.log(error);
+            setServerFail(true);
+            setVisibleNotification(true);
         }
     }
 
@@ -49,10 +53,13 @@ function Login() {
             if (response.ok) {
                 setClientSignedIn(true);
             } else {
+                setServerFail(true);
                 setClientSignedIn(false);
+                setVisibleNotification(true);
             }
         }).catch(error => {
-            //TODO handle verification error
+            setServerFail(true);
+            setVisibleNotification(true);
         });
     }
 
@@ -98,6 +105,11 @@ function Login() {
             </p>
             <div id={"signInBtn"} className={"w-64 py-10 px-16"}></div>
             {clientSignedIn && <Navigate to={"/dashboard"} replace={true} />}
+            {visibleNotification && serverFail && <Notification
+                                notificationInfo={"info"}
+                                notificationTitle={"Server Failure"}
+                                notificationMsg={"An unexpected error occurred and Sign In is currently unavailable."}
+                                setVisibleNotification={setVisibleNotification}/> }
         </div>
     );
 }
