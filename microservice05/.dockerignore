@@ -1,0 +1,7 @@
+/venv
+README.md
+__pycache__
+/csv_prototypes
+Dockerfile
+compose.yaml
+.gitkeep

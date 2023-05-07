@@ -1,0 +1,27 @@
+services:
+  monica:
+    build: 
+      context: .
+      dockerfile: Dockerfile.monica
+    networks:
+      mycharts-network:
+        ipv4_address: 10.0.1.19
+    depends_on:
+      - proxy
+
+  proxy:
+    build:
+      context: .
+      dockerfile: Dockerfile.proxy
+    ports:
+      - "80:80"
+    networks:
+      mycharts-network:
+        ipv4_address: 10.0.1.8
+
+
+
+networks:
+  mycharts-network:
+    external: true
+    name: mycharts-network

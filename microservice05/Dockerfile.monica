@@ -1,0 +1,8 @@
+FROM python:slim-buster
+RUN mkdir -p src
+WORKDIR /src
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+COPY . /src/
+EXPOSE 5000
+CMD ["flask", "--app", "app", "run", "--host", "0.0.0.0"]
