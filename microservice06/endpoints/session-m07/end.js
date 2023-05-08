@@ -24,7 +24,7 @@ function end(req,res,next) {
         Creates a request to end the session.
      */
 
-    axios.post("http://localhost:9000/api/auth/signout", {
+    axios.post(`http://${process.env.MICROSERVICE07_IP}/api/auth/signout`, {
         token: req.body.token
     }, {
         headers: {

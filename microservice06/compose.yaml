@@ -1,0 +1,25 @@
+services:
+  maestro:
+    build:
+      context: .
+      dockerfile: Dockerfile.maestro
+    depends_on:
+      - proxy
+    networks:
+      mycharts-network:
+        ipv4_address: 10.0.1.21
+
+  proxy:
+    build:
+      context: .
+      dockerfile: Dockerfile.proxy
+    ports:
+      - "80:80"
+    networks:
+      mycharts-network:
+        ipv4_address: 10.0.1.17
+
+networks:
+  mycharts-network:
+    external: true
+    name: mycharts-network

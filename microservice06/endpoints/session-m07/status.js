@@ -25,7 +25,7 @@ function status(req,res,next) {
         and returns client status.
      */
 
-    axios.post("http://localhost:9000/api/auth/status", {
+    axios.post(`http://${process.env.MICROSERVICE07_IP}/api/auth/status`, {
         token: req.body.token
     }, {
         headers: {

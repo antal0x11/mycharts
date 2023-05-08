@@ -36,7 +36,7 @@ function initialize(req,res,next) {
         and one for server side tasks(info_).
      */
 
-    axios.post("http://localhost:9000/api/auth/signin", {
+    axios.post(`http://${process.env.MICROSERVICE07_IP}/api/auth/signin`, {
         email: req.body.email
     }, {
         headers: {
@@ -67,7 +67,7 @@ function generateToken(emailAddr) {
         email : emailAddr,
         exp:  expTime
     }, process.env.SECRET_TOKEN_KEY);
-    
+
 }
 
 router.post("/api/client/session/init", emailValidate, initialize);
