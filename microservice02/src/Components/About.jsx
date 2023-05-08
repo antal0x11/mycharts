@@ -2,38 +2,11 @@ import {useEffect, useState} from "react";
 import myCharts from "../assets/myCharts.png";
 import {Link} from "react-router-dom";
 import MenuBar from "./MenuBar.jsx";
+import useAuth from "../Hooks/useAuth.js";
 
 function About () {
 
-    const [authenticated,setAuthenticated] = useState(false);
-
-    const handleAuth = () => {
-        const token = sessionStorage.getItem("token")
-        if (token === null) {
-            setAuthenticated(false);
-            return;
-        }
-
-        fetch(import.meta.env.VITE_CLIENT_SESSION_STATUS, {
-            method: "POST",
-            headers: {
-                "Content-Type" : "application/json"
-            },
-            body : JSON.stringify({token : token})
-        }).then(response => {
-            if (response.ok) {
-                setAuthenticated(true);
-            } else {
-                setAuthenticated(false);
-            }
-        }).catch(error => {
-            //TODO handle verification error
-        })
-    }
-
-    useEffect(() => {
-        handleAuth();
-    },[]);
+    const authenticated = useAuth();
 
     return (
         <div className={"place-self-center"}>

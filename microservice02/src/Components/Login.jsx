@@ -18,6 +18,7 @@ function Login() {
     async function handleCallBackResponse(response) {
         const cleanClientData = jwt_decode(response.credential)
         const obj_req = {email : cleanClientData.email};
+
         try {
             const response = await fetch(import.meta.env.VITE_CLIENT_SESSION_CREATE, {
                 method: "POST",
@@ -30,6 +31,7 @@ function Login() {
             const authObj= await response.json();
             setClientSignedIn(true);
             sessionStorage.setItem("token",authObj.token);
+            sessionStorage.setItem("info_", authObj.info_);
         } catch (error) {
             setServerFail(true);
             setVisibleNotification(true);
@@ -38,7 +40,7 @@ function Login() {
 
     function handleClientStatus() {
         const token = sessionStorage.getItem("token");
-        if (token === null) {
+        if (token === null || token === undefined) {
             setClientSignedIn(false);
             return;
         }

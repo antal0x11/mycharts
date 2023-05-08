@@ -1,8 +1,9 @@
-import {useEffect, useState} from "react";
+import {useEffect, useMemo, useState} from "react";
 import MenuBar from "./MenuBar.jsx";
 import myCharts from "../assets/myCharts.png";
 import ScatterPlot from "../assets/ScatterPlot.png";
 import Unauthorized401 from "../ErrorComponents/Unauthorized401.jsx";
+import useAuth from "../Hooks/useAuth.js";
 
 /*
     Dashboard Component is the component, where client can preview his/her charts,
@@ -12,40 +13,10 @@ import Unauthorized401 from "../ErrorComponents/Unauthorized401.jsx";
 function Dashboard() {
 
     const [previewChart, setPreviewChart] = useState(true);
-    const [clientSignedIn,setClientSignedIn] = useState(0); //0 -> signed in, 2 -> signed out
-
-    const handleAuth = () => {
-        const token = sessionStorage.getItem("token")
-        if (token === null) {
-            setClientSignedIn(2);
-            return;
-        }
-
-        fetch(import.meta.env.VITE_CLIENT_SESSION_STATUS, {
-            method: "POST",
-            headers: {
-                "Content-Type" : "application/json"
-            },
-            body : JSON.stringify({token : token})
-        }).then(response => {
-            if (response.ok) {
-                setClientSignedIn(0);
-            } else {
-                setClientSignedIn(2);
-            }
-        }).catch(error => {
-            //TODO handle verification error
-        })
-    }
-
-    useEffect(() => {
-        handleAuth();
-
-    },[]);
+    const clientSignedIn = useAuth();
 
 
-
-    if (clientSignedIn === 0) {
+    if (clientSignedIn) {
 
         return (
 
@@ -158,15 +129,9 @@ function Dashboard() {
 
             </div>
         );
-    } else if (clientSignedIn === 2) {
+    } else{
         return (
             <Unauthorized401 />
-        )
-    } else {
-        return (
-            <div>
-
-            </div>
         )
     }
 }

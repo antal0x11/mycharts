@@ -1,43 +1,18 @@
 import MenuBar from "./MenuBar.jsx";
 import {useEffect, useState} from "react";
 import Unauthorized401 from "../ErrorComponents/Unauthorized401.jsx";
+import useAuth from "../Hooks/useAuth.js";
 
 function CreditsPage() {
 
     const [firstName,setFirstName] = useState("Lisa");
     const [lastName,setLastName] = useState("Blue");
     const [availableCharts,setAvailableCharts] = useState(15);
-    const [clientSignedIn,setClientSignedIn] = useState(0);
+    const clientSignedIn = useAuth();
 
-    const handleAuth = () => {
-        const token = sessionStorage.getItem("token")
-        if (token === null) {
-            setClientSignedIn(2);
-            return;
-        }
 
-        fetch(import.meta.env.VITE_CLIENT_SESSION_STATUS, {
-            method: "POST",
-            headers: {
-                "Content-Type" : "application/json"
-            },
-            body : JSON.stringify({token : token})
-        }).then(response => {
-            if (response.ok) {
-                setClientSignedIn(0);
-            } else {
-                setClientSignedIn(2);
-            }
-        }).catch(error => {
-            //TODO handle verification error
-        })
-    }
 
-    useEffect(()=>{
-        handleAuth();
-    },[]);
-
-    if (clientSignedIn === 0) {
+    if (clientSignedIn) {
         return  (
             <div>
                 <MenuBar page={"buy-credits"} />
@@ -83,12 +58,8 @@ function CreditsPage() {
                 </div>
             </div>
         );
-    } else if (clientSignedIn === 2){
-        return (<Unauthorized401 />);
     } else {
-        return (
-            <div></div>
-        )
+        return (<Unauthorized401 />);
     }
 }
 

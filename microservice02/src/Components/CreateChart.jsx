@@ -4,6 +4,7 @@ import {useEffect, useState} from "react";
 import myCharts from "../assets/myCharts.png";
 import Notification from "./Notification.jsx";
 import Unauthorized401 from "../ErrorComponents/Unauthorized401.jsx";
+import useAuth from "../Hooks/useAuth.js";
 
 function CreateChart() {
 
@@ -16,36 +17,7 @@ function CreateChart() {
     const [dataFile,setDataFile] = useState(null);
     const [notification,setNotification] = useState(0);
     const [visibleNotification, setVisibleNotification] = useState(false);
-    const [clientSignedIn,setClientSignedIn] = useState(0);
-
-    const handleAuth = () => {
-        const token = sessionStorage.getItem("token")
-        if (token === null) {
-            setClientSignedIn(2);
-            return;
-        }
-
-        fetch(import.meta.env.VITE_CLIENT_SESSION_STATUS, {
-            method: "POST",
-            headers: {
-                "Content-Type" : "application/json"
-            },
-            body : JSON.stringify({token : token})
-        }).then(response => {
-            if (response.ok) {
-                setClientSignedIn(0);
-            } else {
-                setClientSignedIn(2);
-            }
-        }).catch(error => {
-            //TODO handle verification error
-        })
-    }
-
-    useEffect(() => {
-        handleAuth();
-    }, []);
-
+    const clientSignedIn = useAuth();
     function handleSimplePlotProps(event) {
         setChartPlotType(event.target.value);
         (event.target.value === "SimplePlot") ? setSimplePlotPropsVisible(true) : setSimplePlotPropsVisible(false);
@@ -143,7 +115,7 @@ function CreateChart() {
 
 
 
-    if (clientSignedIn === 0) {
+    if (clientSignedIn) {
         return (
             <div>
 
@@ -289,14 +261,10 @@ function CreateChart() {
 
             </div>
         );
-    } else if (clientSignedIn === 2){
+    } else {
         return (
             <Unauthorized401 />
         );
-    } else {
-        return (
-            <div></div>
-        )
     }
 }
 
