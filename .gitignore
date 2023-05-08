@@ -79,3 +79,7 @@ out/
 
 ### VS Code ###
 .vscode/
+
+
+### MICROSERVICE03 ###
+microservice03/data
