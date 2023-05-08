@@ -11,9 +11,16 @@ const app = express();
 app.use(express.json());
 app.use(cors()); //TODO make cors more strict
 
-const audit = require("./endpoints/audit.js");
+const audit = require("./endpoints/audit-m05/audit.js");
+
+const initialize = require("./endpoints/session-m07/initialize");
+const status = require("./endpoints/session-m07/status");
+const end = require("./endpoints/session-m07/end");
 
 app.use("/", audit);
+app.use("/", initialize);
+app.use("/", status);
+app.use("/", end);
 
 app.listen(process.env.PORT, () => {
     figlet("myChartsMaestro", (error,data) => {

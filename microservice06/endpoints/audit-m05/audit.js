@@ -15,7 +15,7 @@ const storage = multer.diskStorage({
 })
 
 const upload = multer({storage : storage});
-async function audit(req, res, next) {
+function audit(req, res, next) {
 
     const reqFile = fs.createReadStream("./uploads/scatter_plot.csv");
 
