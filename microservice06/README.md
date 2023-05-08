@@ -1,6 +1,9 @@
-# MICROSERVICE
+# MICROSERVICE06
 
-## (name)
+## My Charts Orchestrator
 
-(description)
+My Charts Orchestrator(Maestro) is the microservice that controls everything
+in myCharts.It determines the order that certain events
+will take place and makes simple checks to requests before
+it passes the request to the responsible microservice.
 
