@@ -23,7 +23,7 @@ def chart(data_source : str, chart_title : str, x_axis_title : str, y_axis_title
 
     # create directory if it doesn't exist
     try:
-        os.mkdir(os.path.join(Config.STORE_CHARTS,chart_ext,user_id))
+        os.mkdir(os.path.join(Config.STORE_CHARTS,user_id))
     except (FileExistsError, FileNotFoundError ) as directoryIssue:
         if directoryIssue.errno != 17: # TODO 17 is the code for file Exists Error, maybe add more here for FileNotFoundError
             return False
@@ -34,7 +34,13 @@ def chart(data_source : str, chart_title : str, x_axis_title : str, y_axis_title
 
     ax.set( xlabel=x_axis_title, ylabel=y_axis_title, title=chart_title)
 
-    path_to_store_chart = os.path.join(Config.STORE_CHARTS,chart_ext,user_id,chart_id + '.' + chart_ext)
+    try:
+        os.mkdir(os.path.join(Config.STORE_CHARTS,user_id,chart_ext))
+    except (FileExistsError, FileNotFoundError ) as directoryIssue:
+        if directoryIssue.errno != 17: 
+            return False
+
+    path_to_store_chart = os.path.join(Config.STORE_CHARTS,user_id,chart_ext,chart_id + '.' + chart_ext)
 
     if store_db_chart(user_id, chart_id, chart_ext, path_to_store_chart):
         if chart_ext == 'html':

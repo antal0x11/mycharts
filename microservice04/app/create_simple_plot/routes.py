@@ -5,7 +5,6 @@
 '''
 from app.create_simple_plot import simple_plot_create_route
 import os
-from flask import Flask
 from flask import request
 from flask import jsonify
 from flask import current_app
