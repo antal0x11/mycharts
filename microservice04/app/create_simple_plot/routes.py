@@ -2,6 +2,17 @@
 
     Endpoint to create and respond with a simple plot chart
 
+    POST /api/chart/simple_plot
+
+    tilte - {title}
+    xAxis - {xAxis}
+    yAxis - {yAxis}
+    user_id - {user_id}
+    extension - {extension}
+    file - {file with data}
+
+    if not run in a container, you need to folders /tmp, /storage
+
 '''
 from app.create_simple_plot import simple_plot_create_route
 import os

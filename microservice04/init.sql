@@ -6,6 +6,7 @@ USE SimplePlotPaths;
 
 CREATE TABLE CLIENTS_CHARTS (
     id INT AUTO_INCREMENT PRIMARY KEY,
+    TITLE varchar(255),
     USERS_ID varchar(100),
     CHART_ID varchar(20) UNIQUE,
     CHART_EXTENSION varchar(10),

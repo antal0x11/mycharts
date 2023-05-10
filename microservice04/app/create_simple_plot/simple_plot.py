@@ -1,3 +1,9 @@
+'''
+    This module creates a simple plot chart using matplotlib.
+    It also stores the chart to the server and registers the 
+    insertion to a database.
+'''
+
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -42,7 +48,7 @@ def chart(data_source : str, chart_title : str, x_axis_title : str, y_axis_title
 
     path_to_store_chart = os.path.join(Config.STORE_CHARTS,user_id,chart_ext,chart_id + '.' + chart_ext)
 
-    if store_db_chart(user_id, chart_id, chart_ext, path_to_store_chart):
+    if store_db_chart(chart_title, user_id, chart_id, chart_ext, path_to_store_chart):
         if chart_ext == 'html':
             
             with open(path_to_store_chart,'w') as html_file:
@@ -56,7 +62,7 @@ def chart(data_source : str, chart_title : str, x_axis_title : str, y_axis_title
         return False
     
 
-def store_db_chart(users_id : str, charts_id : str, chart_extension : str, filepath_to_chart : str) -> bool:
+def store_db_chart(chart_title : str, users_id : str, charts_id : str, chart_extension : str, filepath_to_chart : str) -> bool:
 
     config_database = {
         "user" : os.getenv("DB_USER"),
@@ -69,10 +75,11 @@ def store_db_chart(users_id : str, charts_id : str, chart_extension : str, filep
         cnx = mysql.connector.connect(**config_database)
         cursor = cnx.cursor()
 
-        new_chart = ("INSERT INTO CLIENTS_CHARTS (USERS_ID,CHART_ID,CHART_EXTENSION,CHART_TYPE,FILEPATH_TO_CHART) " 
-                    "VALUES (%(USERS_ID)s,%(CHART_ID)s,%(CHART_EXTENSION)s,%(CHART_TYPE)s,%(FILEPATH_TO_CHART)s) ")
+        new_chart = ("INSERT INTO CLIENTS_CHARTS (TITLE,USERS_ID,CHART_ID,CHART_EXTENSION,CHART_TYPE,FILEPATH_TO_CHART) " 
+                    "VALUES (%(TITLE)s,%(USERS_ID)s,%(CHART_ID)s,%(CHART_EXTENSION)s,%(CHART_TYPE)s,%(FILEPATH_TO_CHART)s) ")
 
         chart = {
+            "TITLE" : chart_title,
             "USERS_ID" : users_id,
             "CHART_ID" : charts_id,
             "CHART_EXTENSION" : chart_extension,

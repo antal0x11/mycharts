@@ -1,8 +1,10 @@
 '''
     Endpoint to respond with a chart.
-
     accepts a multipart-form/data type request 
-    with key=chart_id and value={chart_id}
+    
+    GET /api/chart/get
+
+    key=chart_id and value={chart_id}
 '''
 
 from app.get_chart import handler_get_chart

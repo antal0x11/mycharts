@@ -1,0 +1,6 @@
+/storage
+/tmp
+.gitkeep
+/venv
+__pycache__
+compose.yaml

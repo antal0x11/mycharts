@@ -1,5 +1,4 @@
 import mysql.connector
-from typing import List
 import os
 
 def handle_send_chart(chart_id : str) -> str:
