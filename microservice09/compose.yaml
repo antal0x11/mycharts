@@ -1,0 +1,30 @@
+services: 
+  anna:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      rabbit:
+        condition: service_healthy
+    networks:
+      mycharts-network:
+        ipv4_address: 10.0.1.85
+
+  rabbit:
+    image: rabbitmq:latest
+    ports:
+      - 5672:5672
+      - 15672:15672
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics","ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    networks:
+      mycharts-network:
+        ipv4_address: 10.0.1.100
+
+networks:
+  mycharts-network:
+    external: true
+    name: mycharts-network
