@@ -10,7 +10,7 @@ function receive_message() {
     const queue = "store_simple_plot_q";
     const exchange = "simple_plot_store";
 
-    amqp.connect("amqp://localhost", function (error_connection, connection) {
+    amqp.connect(`amqp://${process.env.RABBIT_HOST}:${process.env.RABBIT_PORT}`, function (error_connection, connection) {
         if (error_connection) {
             throw error_connection;
         }
