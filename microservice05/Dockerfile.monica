@@ -1,5 +1,7 @@
 FROM python:slim-buster
 RUN mkdir -p src
+ENV RABBIT_HOST=10.0.1.100
+ENV RABBIT_PORT=5672
 WORKDIR /src
 COPY requirements.txt .
 RUN pip install -r requirements.txt
