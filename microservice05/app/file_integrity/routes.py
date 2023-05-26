@@ -8,6 +8,8 @@ from app.file_integrity import audit
 from app.file_integrity import server_clean
 from app.file_integrity.chart_type import Chart 
 from app.file_integrity import enqueue_simple
+from app.file_integrity import enqueue_bar
+from app.file_integrity import enqueue_scatter
 
 from flask import current_app
 from flask import request
@@ -26,10 +28,11 @@ def file_integrity():
     pattern = r'^[A-Z]{6}-[0-9]{6}$'
 
     if len(request.form) != 4 and len(request.form) != 6:
+        
         return (
             {
                 "info" : "fail",
-                "reason" : "missing properties"
+                "reason" : "missing properties 1"
             }
         ),400
     
@@ -38,7 +41,7 @@ def file_integrity():
             return jsonify(
                 {
                     "info" : "fail",
-                    "reason" : "Invalid properties"
+                    "reason" : "Invalid properties-1"
                 }
             ),400
         
@@ -129,13 +132,22 @@ def file_integrity():
     
     if audit.csv_properties_evaluation(tmp_data_file_name, request.form["type"]):
 
+
+        #Enqueue data files to create charts
+
         if request.form["type"] == "simple_plot":
         
             _info = Chart(user_id=request.form["user_id"],title=request.form["title"], chart_type=request.form["type"], extension=request.form["extension"], xAxis=request.form["xAxis"], yAxis=request.form["yAxis"])
             enqueue_simple.enq_simple_plot(tmp_data_file, _info)
 
-        #TODO enqueue scatter_plot and bar_plot
-        
+        if request.form["type"] == "scatter_plot":
+            _info = Chart(user_id=request.form["user_id"],title=request.form["title"], chart_type=request.form["type"], extension=request.form["extension"])
+            enqueue_scatter.enq_scatter_plot(tmp_data_file, _info)
+
+        if request.form["type"] == "bar_plot":
+            _info = Chart(user_id=request.form["user_id"],title=request.form["title"], chart_type=request.form["type"], extension=request.form["extension"])
+            enqueue_bar.enq_bar_plot(tmp_data_file, _info)
+
         if server_clean.server_data_source_cleanup(tmp_data_file_name):
             # TODO maybe add some log
             pass
