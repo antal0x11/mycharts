@@ -3,6 +3,9 @@ const router = express.Router();
 const multer = require("multer");
 const fs = require("fs");
 const axios = require("axios");
+const jwt = require("jsonwebtoken");
+
+let current_time_file_name = Date.now() + ".csv"
 
 const storage = multer.diskStorage({
     destination: function(req,res,cb) {
@@ -10,30 +13,129 @@ const storage = multer.diskStorage({
     },
     filename: function(req,file,cb) {
         //const tmpFileName = Date.now();
-        cb(null,file.originalname);
+        cb(null,current_time_file_name);
     }
 })
 
 const upload = multer({storage : storage});
+
+function eval_body_params(req,res,next) {
+
+    //TODO evaluate body params
+    next();
+}
+
 function audit(req, res, next) {
+    
+    const reqFile = fs.createReadStream(`./uploads/${current_time_file_name}`);
 
-    const reqFile = fs.createReadStream("./uploads/scatter_plot.csv");
+    if (req.body.type === "simple_plot") {
+        axios.post("http://127.0.0.1:5000/api/data/integrity", {
+            title: req.body.title,
+            type: "simple_plot",
+            extension: req.body.extension,
+            xAxis : req.body.xAxis,
+            yAxis : req.body.yAxis,
+            user_id : req.body.user_id,
+            file: reqFile
+        }, {
+            headers: {
+                "Content-Type" : "multipart/form-data"
+            }
+        }).then(response => {
+            next();
+        }).catch(error => {
+            console.error(error);
+            res.status(500).json({"info" : "fail"})
+        }) 
+    } 
+    
+    if (req.body.type === "scatter_plot") {
+        axios.post("http://127.0.0.1:5000/api/data/integrity", {
+            title: req.body.title,
+            type: "scatter_plot",
+            extension: req.body.extension,
+            user_id : req.body.user_id,
+            file: reqFile
+        }, {
+            headers: {
+                "Content-Type" : "multipart/form-data"
+            }
+        }).then((response) => {
+            next();
+        }).catch(error => {
+            console.error(error);
+            res.status(500).json({"info" : "fail"});
+        }) 
+    }
 
-    axios.post("http://localhost/api/data/integrity", {
-        title: req.body.title,
-        type: req.body.type,
-        extension: req.body.extension,
-        file: reqFile
-    }, {
-        headers: {
-            "Content-Type" : "multipart/form-data"
+    if (req.body.type === "bar_plot") {
+        axios.post("http://127.0.0.1:5000/api/data/integrity", {
+            title: req.body.title,
+            type: "bar_plot",
+            extension: req.body.extension,
+            user_id : req.body.user_id,
+            file: reqFile
+        }, {
+            headers: {
+                "Content-Type" : "multipart/form-data"
+            }
+        }).then((response) => {
+            next();
+        }).catch((error) => {
+            console.error(error);
+            res.status(500).json({"info" : "fail"});
+        }) 
+    }
+
+}
+
+function reduceCredit(req,res,next) {
+    
+    const info_ = req.body.info_;
+    
+    axios({
+        method: "post",
+        url : `http://${process.env.MICROSERVICE03_IP}/api/client/update/charts`,
+        data : {
+            email : get_info_from_token(info_)
         }
-    }).then(response => {
-        res.status(response.status).json(response.data);
-    }).catch(error => {
-        res.status(error.response.status).json(error.response.data);
+    }).then((response) => {
+        res.status(200).json(response.data);
+    }).catch( (error) => {
+        console.error(error);
+        res.status(500).json({
+            "info" : "something broke"
+        });
+    });
+    next();
+}
+
+function cleanup() {
+
+    /*
+        Remove the temporary csv file
+    */
+
+    fs.unlink("./uploads/" + current_time_file_name, (error) => {
+        if (error) {
+            console.error(error);
+        }
     })
 }
 
-router.post("/api/data/audit", upload.single("file"), audit);
+function get_info_from_token(_info) {
+
+    /*
+        Return email from the token
+    */
+    try {
+        const dec = jwt.verify(_info, process.env.SECRET_TOKEN_KEY);
+        return dec.email;
+    } catch(error) {
+        return undefined;
+    }
+}
+
+router.post("/api/data/audit", upload.single("file"), eval_body_params,audit, reduceCredit,cleanup);
 module.exports = router;

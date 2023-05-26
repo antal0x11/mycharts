@@ -29,6 +29,42 @@ function emailValidate(req,res,next) {
         }
     }
 }
+
+function clientExists(req,res,next) {
+    /*
+    *   TODO validate fields
+    *   
+    * 
+    */
+
+    axios.post(`http://${process.env.MICROSERVICE03_IP}/api/client/search`, {
+        email: req.body.email
+    }, {
+        "Content-Type" : "application/json"
+    }).then( response => {
+        next()
+    }).catch(error => {
+        axios.post(`http://${process.env.MICROSERVICE03_IP}/api/client/create`, {
+            "firstname" : req.body.firstname,
+            "lastname" : req.body.lastname,
+            "email" : req.body.email,
+            "profileImagePath" : req.body.imagePath
+        }, {
+            headers: {
+                "Content-Type" : "application/json"
+            }
+        }).then( () => {
+            next();
+        }).catch(error => {
+            res.status(500).json(
+                {
+                    "info" : "something broke into pieces"
+                }
+            );
+        })
+    })
+}
+
 function initialize(req,res,next) {
 
     /*
@@ -44,6 +80,7 @@ function initialize(req,res,next) {
         }
     }).then( response => {
         const infoToken = generateToken(req.body.email);
+        
         res.status(response.status).json(
             {
                 "token" : response.data.token,
@@ -51,6 +88,8 @@ function initialize(req,res,next) {
             }
         )
     }).catch(error => {
+        console.log(error)
+        //res.status(200).send("ok");
         res.status(error.response.status).json(error.response.data);
     })
 }
@@ -70,5 +109,5 @@ function generateToken(emailAddr) {
 
 }
 
-router.post("/api/client/session/init", emailValidate, initialize);
+router.post("/api/client/session/init", emailValidate, clientExists,initialize);
 module.exports = router;
