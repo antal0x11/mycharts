@@ -5,9 +5,9 @@
     y-axis title and main chart title it creates a simple
     plot chart.
 
-    It stores the created chart temporarily, and sends it 
+    It stores the created chart temporarily, then sends it 
     to an exchange(name = simple_plot_store) that is responsible 
-    to store it the chart.
+    to store it.
 
     It uses simple_plot_q that is binded with simple_plot_charts 
     exchange.
@@ -81,7 +81,7 @@ def callback_create_chart(ch, method, properties, body) -> None:
     ax.grid(True)
     ax.set(xlabel=xAxis, ylabel=yAxis, title=title_chart)
 
-    fig.savefig(chart_info.tmp_path, dpi=300) #TODO handle html files
+    fig.savefig(chart_info.tmp_path) #TODO handle html files
 
     print(" [+] Chart Created for {0} at {1}.".format(user, dt))
     print(" [+] Sending ...")
