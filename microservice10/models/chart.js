@@ -44,6 +44,10 @@ const chart = sequelize.define('Chart', {
             type: DataTypes.STRING,
             allowNull: false,
             unique: true
+        },
+
+        created: {
+            type: DataTypes.DATE
         }
         
     }, {
