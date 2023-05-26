@@ -23,7 +23,7 @@ public class ClientUtils {
         int min = 0;
         int max = 25;
 
-        for (int i=0; i<12; i++) {
+        for (int i=0; i<13; i++) {
             if (i < 6) {
                 randomUserId.add(alphabet[randomNumber.nextInt(max - min + 1) + min]);
             } else if (i == 6){
