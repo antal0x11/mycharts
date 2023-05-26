@@ -5,6 +5,7 @@ import myCharts from "../assets/myCharts.png";
 import Notification from "./Notification.jsx";
 import Unauthorized401 from "../ErrorComponents/Unauthorized401.jsx";
 import useAuth from "../Hooks/useAuth.js";
+import axios from "axios";
 
 function CreateChart() {
 
@@ -18,6 +19,33 @@ function CreateChart() {
     const [notification,setNotification] = useState(0);
     const [visibleNotification, setVisibleNotification] = useState(false);
     const clientSignedIn = useAuth();
+    const [fileDrag, setFileDrag] = useState(false);
+    const [fileName,setFileName] = useState("");
+    const [userID, setUserId] = useState(null);
+
+    useEffect(() => {
+        getClientInfo();
+    }, []);
+
+    function getClientInfo() {
+        const info_ = sessionStorage.getItem("info_");
+
+        axios.post("http://localhost:7000/api/client/info", {
+            info_ : info_,
+        }, {
+            headers: {
+                "Content-Type" : "application/json"
+            }
+        }).then(response => {
+            
+            setUserId(response.data.userId);
+        
+        }).catch(error => {
+            console.error(error);
+        })
+    }
+
+
     function handleSimplePlotProps(event) {
         setChartPlotType(event.target.value);
         (event.target.value === "SimplePlot") ? setSimplePlotPropsVisible(true) : setSimplePlotPropsVisible(false);
@@ -71,46 +99,119 @@ function CreateChart() {
            return;
        }
 
-       if (dataFile === null) {
-           setVisibleNotification(true);
-           setNotification(8); // 8 -> if the client did not upload any file
-           return;
-       }
-
-        const formData = new FormData();
-        if (chartPlotType !== "SimplePlot") {
-            formData.append("title", chartTitle);
-            formData.append("extension",chartExtension);
-            formData.append("type",chartPlotType)
-            formData.append("datafile", dataFile);
-        } else {
-            formData.append("title", chartTitle);
-            formData.append("extension",chartExtension);
-            formData.append("type", chartPlotType);
-            formData.append("xAxis", simplePlotTypeXAxisTitle);
-            formData.append("yAxis", simplePlotTypeYAxisTitle);
-            formData.append("datafile", dataFile);
+        if (dataFile === null) {
+            setVisibleNotification(true);
+            setNotification(8); // 8 -> if the client did not upload any file
+            return;
         }
-        console.log(formData);
-        const requestOptions = {
-            method : "POST",
-            body : formData
-        };
 
-        fetch("http://localhost:9000/", requestOptions)
-            .then((response) => {
-                if (response.status === 200) {
-                    setVisibleNotification(true);
-                    setNotification(5); // 5 -> data input is correct
-                } else {
-                    setVisibleNotification(true);
-                    setNotification(6) // 6 -> data input has mistakes
+        const info_ = sessionStorage.getItem("info_");
+        
+        if (chartPlotType === "SimplePlot") {
+
+            axios.post("http://localhost:7000/api/data/audit", {
+                user_id : userID,
+                info_ : info_,
+                title : chartTitle,
+                extension : chartExtension,
+                type : "simple_plot",
+                xAxis : simplePlotTypeXAxisTitle,
+                yAxis : simplePlotTypeYAxisTitle,
+                file : dataFile
+            }, {
+                headers : {
+                    "Content-Type" : "multipart/form-data"
                 }
-            })
-            .catch(() => {
+            }).then( () => {
                 setVisibleNotification(true);
-                setNotification(7); // 7 -> if upload service is unavailable
-            } );
+                setNotification(5);
+            }).catch(() => {
+                setVisibleNotification(true);
+                setNotification(6);
+            })
+        }
+
+        if (chartPlotType === "BarPlotWithLegend") {
+
+            axios.post("http://localhost:7000/api/data/audit", {
+                user_id : userID,
+                info_ : info_,
+                title : chartTitle,
+                extension : chartExtension,
+                type : "bar_plot",
+                file : dataFile
+            }, {
+                headers : {
+                    "Content-Type" : "multipart/form-data"
+                }
+            }).then( () => {
+                setVisibleNotification(true);
+                setNotification(5);
+            }).catch(() => {
+                setVisibleNotification(true);
+                setNotification(6);
+            })
+        }
+
+        if (chartPlotType === "ScatterPlot") {
+
+            axios.post("http://localhost:7000/api/data/audit", {
+                user_id : userID,
+                info_ : info_,
+                title : chartTitle,
+                extension : chartExtension,
+                type : "scatter_plot",
+                file : dataFile
+            }, {
+                headers : {
+                    "Content-Type" : "multipart/form-data"
+                }
+            }).then( () => {
+                setVisibleNotification(true);
+                setNotification(5);
+            }).catch(() => {
+                setVisibleNotification(true);
+                setNotification(6);
+            })
+        }
+
+    }
+
+    function handleDragStart (event) {
+        event.preventDefault();
+        setFileDrag(true);
+    }
+
+    function handleDragEnd () {
+        setFileDrag(false);
+    }
+
+    function handleDragOver (event) {
+        event.preventDefault();
+    }
+
+    function handleDrop (event) {
+        event.preventDefault();
+        setFileDrag(false);
+
+        setDataFile(event.dataTransfer.files[0]);
+        setFileName(event.dataTransfer.files[0].name);
+    }
+
+    function handleFileSelection() {
+
+        const tmpInput = document.createElement("input");
+        tmpInput.setAttribute("type", "file");
+        tmpInput.accept = ".csv";
+        tmpInput.click();
+
+        tmpInput.addEventListener("change", (event) => {
+            setDataFile(event.target.files[0]);
+            setFileName(event.target.files[0].name);
+            console.log(event.target.files[0]);
+        })
+
+        tmpInput.remove();
     }
 
 
@@ -238,24 +339,24 @@ function CreateChart() {
                         </div>
                     }
 
-                    <form encType={"multipart/form-data"} onSubmit={handleChartSubmit}>
-                        <div className={"p-4 hover:cursor-pointer"}>
-                            <div className={"border-2 border-dashed border-black px-4 py-6 bg-orange-50 justify-center rounded-md"}>
-                                <span className={"text-center text-md"}>Drag and Drop your data file to upload or select one</span>
-                                <input
-                                    id={"t"}
-                                    type={"file"}
-                                    className={"hover:cursor-pointer"}
-                                    accept={".csv,.xlsx"}
-                                    onChange={handleFileInput}
-                                    />
-                            </div>
-                        </div>
+                    <div className={"p-4 hover:cursor-pointer"}>
+                        <div className={"border-2 border-dashed border-black px-4 py-6 bg-orange-50 justify-center rounded-md"}
+                             onDragStart={handleDragStart}
+                             onDragEnd={handleDragEnd}
+                             onDragOver={handleDragOver}
+                             onDrop={handleDrop}
+                             onClick={handleFileSelection}>
+                            <span className={"text-center text-md"}>Drag and Drop your data file to upload or click to select one. Current Selection : {fileName}</span>
 
-                        <div className={"p-4"}>
-                            <button className={"border-2 border-black rounded-lg p-4 w-36 h-14"}>Submit</button>
                         </div>
-                    </form>
+                    </div>
+
+                    <div className={"p-4"}>
+                        <button className={"border-2 border-black rounded-lg p-4 w-36 h-14"}
+                                onClick={handleChartSubmit}>Submit</button>
+                    </div>
+
+
 
                 </div>
 

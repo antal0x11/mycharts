@@ -17,7 +17,14 @@ function Login() {
 
     async function handleCallBackResponse(response) {
         const cleanClientData = jwt_decode(response.credential)
-        const obj_req = {email : cleanClientData.email};
+        //console.log(cleanClientData);
+        const obj_req = {
+            firstname : cleanClientData.given_name,
+            lastname : cleanClientData.family_name,
+            email : cleanClientData.email,
+            imagePath : cleanClientData.picture
+
+        };
 
         try {
             const response = await fetch(import.meta.env.VITE_CLIENT_SESSION_CREATE, {
@@ -55,12 +62,13 @@ function Login() {
             if (response.ok) {
                 setClientSignedIn(true);
             } else {
-                setServerFail(true);
+                //setServerFail(true);
                 setClientSignedIn(false);
-                setVisibleNotification(true);
+                //setVisibleNotification(true);
             }
         }).catch(error => {
-            setServerFail(true);
+            
+            //setServerFail(true);
             setVisibleNotification(true);
         });
     }

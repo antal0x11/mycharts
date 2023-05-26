@@ -6,7 +6,7 @@ import {useState} from "react";
     navigate.
  */
 
-function MenuBar ({page}) {
+function MenuBar ({page, image}) {
 
 
     const [smallScreenMenuIsHidden,setSmallScreeMenuIsHidden] = useState(false);
@@ -121,7 +121,7 @@ function MenuBar ({page}) {
                                 </Link>
                             }
 
-                            {markPage === "myaccount" &&
+                            {/* {markPage === "myaccount" &&
                                 <Link
                                     to={"/myaccount"}
                                     className="bg-white hover:text-black text-black px-3 py-2 text-sm font-medium">
@@ -135,7 +135,7 @@ function MenuBar ({page}) {
                                     className="hover:bg-white hover:text-black text-black px-3 py-2 text-sm font-medium">
                                     My Account
                                 </Link>
-                            }
+                            } */}
 
                             { markPage === "buy-credits" &&
                                 <Link
@@ -174,8 +174,8 @@ function MenuBar ({page}) {
                                 onClick={handleLogout}>
                                 Sign Out
                             </button>
-
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -193,10 +193,10 @@ function MenuBar ({page}) {
                             Create Chart
                         </Link>
 
-                        <Link to={"/myaccount"}
+                        {/* <Link to={"/myaccount"}
                             className="text-black hover:bg-white hover:text-black block rounded-md px-3 py-2 text-base font-medium">
                             My Account
-                        </Link>
+                        </Link> */}
 
                         <Link to={"/buy-credit"}
                             className="text-black hover:bg-white hover:text-black block rounded-md px-3 py-2 text-base font-medium">

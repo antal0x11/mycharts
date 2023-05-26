@@ -19,8 +19,8 @@ function App() {
                 <Route path={"/create-chart"} element={<CreateChart />} />
                 <Route path={"/buy-credit"} element={<CreditsPage />} />
                 <Route path={"/about"} element={<About />} />
-                <Route path={"/myaccount"} element={<MyAccount />} />
-                <Route path={"*"} element={<Page404 />} />
+                {/* <Route path={"/myaccount"} element={<MyAccount />} /> */}
+                {/* <Route path={"*"} element={<Page404 />} /> */}
             </Routes>
         </BrowserRouter>
     );

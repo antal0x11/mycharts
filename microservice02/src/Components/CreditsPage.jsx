@@ -2,14 +2,63 @@ import MenuBar from "./MenuBar.jsx";
 import {useEffect, useState} from "react";
 import Unauthorized401 from "../ErrorComponents/Unauthorized401.jsx";
 import useAuth from "../Hooks/useAuth.js";
+import axios from "axios";
+import Notification from "./Notification.jsx";
 
 function CreditsPage() {
 
-    const [firstName,setFirstName] = useState("Lisa");
-    const [lastName,setLastName] = useState("Blue");
-    const [availableCharts,setAvailableCharts] = useState(15);
+    const [firstName,setFirstName] = useState("");
+    const [lastName,setLastName] = useState("");
+    const [availableCharts,setAvailableCharts] = useState(0);
+    const [buyCompleteVisible,setBuyCompleteVisible] = useState(false);
+    const [buyIncompleteVisible,setBuyIncompleteVisible] = useState(false);
     const clientSignedIn = useAuth();
 
+    const getInfo = () => {
+
+        const info_ = sessionStorage.getItem("info_");
+
+        axios.post("http://localhost:7000/api/client/info", {
+            info_ : info_
+        }, {
+            headers: {
+                "Content-Type" : "application/json"
+            }
+        }).then(response => {
+            setFirstName(response.data.firstName);
+            setLastName(response.data.lastName);
+            setAvailableCharts(response.data.credit);
+
+        }).catch(error => {
+            console.log(error);
+        })
+    }
+
+    useEffect(() => {
+        //const token = sessionStorage.getItem("token")
+        getInfo();
+    },[]);
+
+    function handleBuy(credit) {
+
+        const info_ = sessionStorage.getItem("info_");
+        const token = sessionStorage.getItem("token");
+
+        axios.post("http://localhost:7000/api/client/buy", {
+            info_ : info_,
+            token : token,
+            credit : credit
+        }, {
+            headers: {
+                "Content-Type" : "application/json"
+            }
+        }).then(response => {
+            setAvailableCharts(availableCharts + credit);
+            setBuyCompleteVisible(true);
+        }).catch(error => {
+            setBuyIncompleteVisible(true);
+        })
+    }
 
 
     if (clientSignedIn) {
@@ -36,26 +85,38 @@ function CreditsPage() {
                 </div>
 
                 <div className={"grid grid-cols-1 sm:grid-cols-4 gap-4 place-items-center p-4"}>
-                    <div className={"block border-black rounded h-32 w-40 p-4 border-2 text-center hover:cursor-pointer bg-amber-50 hover:bg-amber-200 shadow hover:shadow-xl transition duration-150 ease-in-out"}>
+                    <div className={"block border-black rounded h-32 w-40 p-4 border-2 text-center hover:cursor-pointer bg-amber-50 hover:bg-amber-200 shadow hover:shadow-xl transition duration-150 ease-in-out"}
+                         onClick={() => handleBuy(5)}>
                         <span className={"block text-2xl p-2"}>5</span>
                         <span className={"block text-lg italic p-2"}>$0.99</span>
                     </div>
 
-                    <div className={"block border-black rounded h-32 w-40 p-4 border-2 text-center hover:cursor-pointer bg-amber-50 hover:bg-amber-200 shadow hover:shadow-xl transition duration-150 ease-in-out"}>
+                    <div className={"block border-black rounded h-32 w-40 p-4 border-2 text-center hover:cursor-pointer bg-amber-50 hover:bg-amber-200 shadow hover:shadow-xl transition duration-150 ease-in-out"}
+                         onClick={ () => handleBuy(10)}>
                         <span className={"block text-2xl p-2"}>10</span>
                         <span className={"block  text-lg italic p-2"}>$1.99</span>
                     </div>
 
-                    <div className={"block border-black rounded h-32 w-40 p-4 border-2 text-center hover:cursor-pointer bg-amber-50 hover:bg-amber-200 shadow hover:shadow-xl transition duration-150 ease-in-out"}>
+                    <div className={"block border-black rounded h-32 w-40 p-4 border-2 text-center hover:cursor-pointer bg-amber-50 hover:bg-amber-200 shadow hover:shadow-xl transition duration-150 ease-in-out"}
+                         onClick={() => handleBuy(20)}>
                         <span className={"block text-2xl p-2"}>20</span>
                         <span className={"block text-lg italic p-2"}>$3.99</span>
                     </div>
 
-                    <div className={"block border-black rounded h-32 w-40 p-4 border-2 text-center hover:cursor-pointer bg-amber-50 hover:bg-amber-200 shadow hover:shadow-xl transition duration-150 ease-in-out"}>
-                        <span className={"block text-2xl p-2"}>50</span>
+                    <div className={"block border-black rounded h-32 w-40 p-4 border-2 text-center hover:cursor-pointer bg-amber-50 hover:bg-amber-200 shadow hover:shadow-xl transition duration-150 ease-in-out"}
+                         onClick={() => handleBuy(40)}>
+                        <span className={"block text-2xl p-2"}>40</span>
                         <span className={"block text-lg italic p-2"}>$4.99</span>
                     </div>
                 </div>
+                {buyCompleteVisible && <Notification notificationTitle={"Buy Complete"}
+                                                     notificationMsg={"Your order has been completed"}
+                                                     setVisibleNotification={setBuyCompleteVisible}
+                                                     notificationInfo={"success"}/>}
+                {buyIncompleteVisible && <Notification notificationTitle={"Buy Incomplete"}
+                                                       notificationInfo={"info"}
+                                                       setVisibleNotification={setBuyIncompleteVisible}
+                                                       notificationMsg={"There was a problem with your order."} /> }
             </div>
         );
     } else {
