@@ -192,7 +192,25 @@ function store_chart(chart_bytes, info) {
             });
         break;
 
-        //TODO add support for pdf, html, svg
+        case "pdf":
+            const bufferPDF = Buffer.from(chart_bytes, "base64");
+            fs.writeFile(info.storage_path, bufferPDF, (error) => {
+                if (error) {
+                    console.error(" [+] Failed to store pdf file for user: " + info.user_id);
+                }
+            });
+        break;
+
+        case "svg":
+            const bufferSVG = Buffer.from(chart_bytes, "base64");
+            fs.writeFile(info.storage_path, bufferSVG, (error) => {
+                if (error) {
+                    console.error(" [+] Failed to store svg file for user: " + info.user_id);
+                }
+            })    
+        break;
+
+        //TODO add support for html
 
         default:
             throw "Invalid Extension";
