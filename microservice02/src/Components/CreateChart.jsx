@@ -214,6 +214,32 @@ function CreateChart() {
         tmpInput.remove();
     }
 
+    function handlePrototypeSimplePlot() {
+        const link = document.createElement('a');
+        link.href = "/simple_plot.csv";
+        link.download = "simple_plot_prototype.csv";
+        link.click();
+
+        link.remove();
+    }
+
+    function handlePrototypeScatterPlot() {
+        const link = document.createElement('a');
+        link.href = "/scatter_plot.csv";
+        link.download = "scatter_plot_prototype.csv";
+        link.click();
+
+        link.remove();
+    }
+
+    function handlePrototypeBarPlot() {
+        const link = document.createElement('a');
+        link.href = "/bar_plot.csv";
+        link.download = "bar_plot_prototype.csv";
+        link.click();
+
+        link.remove();
+    }
 
 
     if (clientSignedIn) {
@@ -280,86 +306,100 @@ function CreateChart() {
 
 
 
+                <div className="flex justify-center space-x-4">
 
-                <div className={"box-border border-2 rounded-md border-black mx-auto h-fit w-96 mt-4"}>
-                    <img src={myCharts}
-                        alt={"myCharts logo"}
-                         className={"bg-fixed"}/>
-                    <div className={"p-4"}>
-                        <input
-                            className="px-4 py-2 border-2 border-black focus:outline-none rounded-md w-full"
-                            type={"text"}
-                            placeholder="Chart Title"
-                            onChange={handleChartTitleChange}
-                            required/>
+                    <div className="h-fit w-fit mt-4 text-xl p-4">
+                        <h1 className="text-center font-bold">CSV Prototypes</h1>
+                        <p className="mb-2 mt-2 underline">
+                            Select chart to view a data source prototype.
+                        </p>
+                        
+                        <ul className="list-disc">
+                            <li className="hover:cursor-pointer hover:text-blue-500" onClick={handlePrototypeSimplePlot}>Simple Plot</li>
+                            <li className="hover:cursor-pointer hover:text-blue-500" onClick={handlePrototypeScatterPlot}>Scatter Plot</li>
+                            <li className="hover:cursor-pointer hover:text-blue-500" onClick={handlePrototypeBarPlot}>Bar Plot</li>
+                        </ul>
                     </div>
 
-                    <div className={"p-4"}>
-                        <select className={"block w-full px-4 py-2 rounded-md border-2 border-black focus:outline-none hover:cursor-pointer bg-white"}
-                                onChange={handleChartExtension}>
-                            <option defaultValue={"Select File Format"}>Select File Format</option>
-                            <option value={"png"}>png</option>
-                            <option value={"html"}>html</option>
-                            <option value={"svg"}>svg</option>
-                            <option value={"pdf"}>pdf</option>
-                        </select>
-                    </div>
-
-                    <div className={"p-4"}>
-                        <select
-                            className={"block w-full px-4 py-2 rounded-md border-2 border-black focus:outline-none hover:cursor-pointer bg-white"}
-                            onChange={handleSimplePlotProps}>
-                            <option defaultValue={"Select File Format"}>Select Chart Type</option>
-                            <option value={"SimplePlot"}>Simple Plot</option>
-                            <option value={"BarPlotWithLegend"}>Bar Plot With Labels</option>
-                            <option value={"ScatterPlot"}>Scatter Plot</option>
-                        </select>
-                    </div>
-
-                    {simplePlotPropsVisible &&
+                    <div className={"box-border border-2 rounded-md border-black mx-auto h-fit w-96 mt-4"}>
+                        <img src={myCharts}
+                            alt={"myCharts logo"}
+                            className={"bg-fixed"}/>
                         <div className={"p-4"}>
                             <input
                                 className="px-4 py-2 border-2 border-black focus:outline-none rounded-md w-full"
                                 type={"text"}
-                                placeholder="x Axis Title"
-                                onChange={handleSimplePlotTypeXAxisTitle}
+                                placeholder="Chart Title"
+                                onChange={handleChartTitleChange}
                                 required/>
                         </div>
-                    }
-
-                    {simplePlotPropsVisible &&
 
                         <div className={"p-4"}>
-                            <input
-                                className="px-4 py-2 border-2 border-black focus:outline-none rounded-md w-full"
-                                type={"text"}
-                                placeholder="y Axis Title"
-                                onChange={handleSimplePlotTypeYAxisTitle}
-                                required/>
+                            <select className={"block w-full px-4 py-2 rounded-md border-2 border-black focus:outline-none hover:cursor-pointer bg-white"}
+                                    onChange={handleChartExtension}>
+                                <option defaultValue={"Select File Format"}>Select File Format</option>
+                                <option value={"png"}>png</option>
+                                <option value={"html"}>html</option>
+                                <option value={"svg"}>svg</option>
+                                <option value={"pdf"}>pdf</option>
+                            </select>
                         </div>
-                    }
 
-                    <div className={"p-4 hover:cursor-pointer"}>
-                        <div className={"border-2 border-dashed border-black px-4 py-6 bg-orange-50 justify-center rounded-md"}
-                             onDragStart={handleDragStart}
-                             onDragEnd={handleDragEnd}
-                             onDragOver={handleDragOver}
-                             onDrop={handleDrop}
-                             onClick={handleFileSelection}>
-                            <span className={"text-center text-md"}>Drag and Drop your data file to upload or click to select one. Current Selection : {fileName}</span>
-
+                        <div className={"p-4"}>
+                            <select
+                                className={"block w-full px-4 py-2 rounded-md border-2 border-black focus:outline-none hover:cursor-pointer bg-white"}
+                                onChange={handleSimplePlotProps}>
+                                <option defaultValue={"Select File Format"}>Select Chart Type</option>
+                                <option value={"SimplePlot"}>Simple Plot</option>
+                                <option value={"BarPlotWithLegend"}>Bar Plot With Labels</option>
+                                <option value={"ScatterPlot"}>Scatter Plot</option>
+                            </select>
                         </div>
+
+                        {simplePlotPropsVisible &&
+                            <div className={"p-4"}>
+                                <input
+                                    className="px-4 py-2 border-2 border-black focus:outline-none rounded-md w-full"
+                                    type={"text"}
+                                    placeholder="x Axis Title"
+                                    onChange={handleSimplePlotTypeXAxisTitle}
+                                    required/>
+                            </div>
+                        }
+
+                        {simplePlotPropsVisible &&
+
+                            <div className={"p-4"}>
+                                <input
+                                    className="px-4 py-2 border-2 border-black focus:outline-none rounded-md w-full"
+                                    type={"text"}
+                                    placeholder="y Axis Title"
+                                    onChange={handleSimplePlotTypeYAxisTitle}
+                                    required/>
+                            </div>
+                        }
+
+                        <div className={"p-4 hover:cursor-pointer"}>
+                            <div className={"border-2 border-dashed border-black px-4 py-6 bg-orange-50 justify-center rounded-md"}
+                                 onDragStart={handleDragStart}
+                                 onDragEnd={handleDragEnd}
+                                 onDragOver={handleDragOver}
+                                 onDrop={handleDrop}
+                                 onClick={handleFileSelection}>
+                                <span className={"text-center text-md"}>Drag and Drop your data file to upload or click to select one. Current Selection : {fileName}</span>
+
+                            </div>
+                        </div>
+
+                        <div className={"p-4"}>
+                            <button className={"border-2 border-black rounded-lg p-4 w-36 h-14"}
+                                    onClick={handleChartSubmit}>Submit</button>
+                        </div>
+
                     </div>
-
-                    <div className={"p-4"}>
-                        <button className={"border-2 border-black rounded-lg p-4 w-36 h-14"}
-                                onClick={handleChartSubmit}>Submit</button>
-                    </div>
-
-
 
                 </div>
-
+                
             </div>
         );
     } else {

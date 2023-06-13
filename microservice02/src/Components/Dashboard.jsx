@@ -30,19 +30,41 @@ function Dashboard() {
     const [errorNotification, setErrorNotification] = useState(false);
 
 
-    async function fetchChart(_id, bucket) {
+    async function fetchChart(_id, bucket, ext_type) {
         
         try {
             
             const bucket_chart = bucket.split(" ").join("").toLowerCase();
             const res = await fetch(`http://${import.meta.env.VITE_MICROSERVICE06}/api/storage/${bucket_chart}/${_id}`);
             const imgBlob = await res.blob();
-            const url = URL.createObjectURL(imgBlob);
+
+            let tp;
+            
+            switch (ext_type) {
+                case "img" : 
+                    tp = "image/png"
+                    break;
+
+                case "svg":
+                    tp= "image/svg+xml"
+                    break;
+
+                case "pdf":
+                    tp = "application/pdf"
+                    break;
+
+                case "html":
+                    break;
+                
+            }
+
+            const url = URL.createObjectURL(new Blob([imgBlob], {type : tp}));
+            
             setCurrentImg(url);
             setUrlTracker((prevURL) => [...prevURL, url]);
             
         } catch(error) {
-            //console.log(error);
+            console.error(error);
             setErrorNotification(true);
         }
     }
@@ -57,9 +79,10 @@ function Dashboard() {
 
         const _id = event.currentTarget.parentNode.getAttribute("data-key");
         const bucket = event.currentTarget.parentNode.getAttribute("data-bucket");
+        const ext_type = event.currentTarget.parentNode.getAttribute("data-type"); 
 
-        setSelectedChartType(event.currentTarget.parentNode.getAttribute("data-type"));
-        fetchChart(_id, bucket);   
+        setSelectedChartType(ext_type);
+        fetchChart(_id, bucket, ext_type);   
         setPreviewChart(true); 
     }
 
@@ -78,11 +101,13 @@ function Dashboard() {
             link.download = "chart." + tp;
             link.click();
 
+            link.remove();
+
             URL.revokeObjectURL(url);
 
         } catch(error) {
             setErrorNotification(true);
-            //console.log(error);
+            //console.error(error);
         }
     }
 
@@ -125,7 +150,7 @@ function Dashboard() {
 
                 const created_at = item.created.split("T");
                 const dt = created_at[0];
-                const tm = created_at[1].split(".")[0];
+                //const tm = created_at[1].split(".")[0];
                 index++;
 
                 return (
@@ -140,7 +165,7 @@ function Dashboard() {
                             <td className={"border p-4 border-black hover:cursor-pointer hover:text-blue-500 hover:scale-110 transform transition-transform duration-300"}
                                 onClick={showCurrentChart}>
                                     {item.title}</td>
-                            <td className={"border p-4 border-black"}>{`${tm} ${dt}`}</td>
+                            <td className={"border p-4 border-black"}>{`${dt}`}</td>
                             <td className={"border p-4 border-black hover:cursor-pointer hover:text-blue-500 hover:scale-110 transform transition-transform duration-300"}
                                 onClick={downloadChart}>
                                     {item.chart_extension}
@@ -292,7 +317,6 @@ function Dashboard() {
                         }
                         
 
-                        {/* TODO Fix Display Issue */}
                         {previewChart && selectedChartType === "pdf" && 
                             <embed
                                 type="application/pdf"
@@ -300,10 +324,10 @@ function Dashboard() {
                                 alt={"client chart"}
                                 width={"100%"}
                                 height={"500px"}
-                                className={"mx-auto p-2"}/>
+                                className={"mx-auto p-2"}
+                                download="chart"/>
                         }
 
-                        {/* TODO Fix Display Issue */}
                         {previewChart && selectedChartType === "svg" &&
                             <img
                                 src={currentImg}
