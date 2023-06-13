@@ -1,0 +1,6 @@
+/venv
+README.md
+__pycache__
+/csv_prototypes
+.gitkeep
+/tmp

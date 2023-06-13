@@ -1,0 +1,13 @@
+services: 
+  tarzan:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    networks:
+      mycharts-network:
+        ipv4_address: 10.0.1.137
+
+networks:
+  mycharts-network:
+    external: true
+    name: mycharts-network
