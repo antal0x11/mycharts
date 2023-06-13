@@ -29,7 +29,7 @@ function signin(req, res, next) {
 
     client.connect()
     .then(() => {
-        client.set(digest,"true", {EX: 1200})
+        client.set(digest,"true", {EX: 3600})
         .then(() => {
 
             res.status(200).json(
