@@ -308,13 +308,13 @@ function CreateChart() {
 
                 <div className="flex justify-center space-x-4">
 
-                    <div className="h-fit w-fit mt-4 text-xl p-4">
+                    <div className="h-fit w-fit mt-4 text-xl p-4 border border-2 border-black rounded shadow-xl">
                         <h1 className="text-center font-bold">CSV Prototypes</h1>
                         <p className="mb-2 mt-2 underline">
                             Select chart to view a data source prototype.
                         </p>
                         
-                        <ul className="list-disc">
+                        <ul className="list-disc p-4">
                             <li className="hover:cursor-pointer hover:text-blue-500" onClick={handlePrototypeSimplePlot}>Simple Plot</li>
                             <li className="hover:cursor-pointer hover:text-blue-500" onClick={handlePrototypeScatterPlot}>Scatter Plot</li>
                             <li className="hover:cursor-pointer hover:text-blue-500" onClick={handlePrototypeBarPlot}>Bar Plot</li>

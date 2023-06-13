@@ -148,6 +148,10 @@ function Dashboard() {
                     item.chart_type = "Scatter Plot";
                 }
 
+                if (item.chart_type === "bar_plot") {
+                    item.chart_type = "Bar Plot";
+                }
+
                 const created_at = item.created.split("T");
                 const dt = created_at[0];
                 //const tm = created_at[1].split(".")[0];
