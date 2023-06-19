@@ -44,7 +44,7 @@ function receive_message() {
                     console.log(" [+] Chart Store Completed");
 
                 }, {
-                    noAck: false
+                    noAck: true
                 });
             });
 
