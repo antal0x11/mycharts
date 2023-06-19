@@ -1,6 +1,0 @@
-__pycache__
-*.sqlite
-/sample_json
-/csv_prototypes
-Dockerfile
-/data_generator
