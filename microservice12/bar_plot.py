@@ -36,6 +36,9 @@ def main():
     #connection = pika.BlockingConnection(pika.ConnectionParameters(host="localhost"))
     channel = connection.channel()
 
+    channel.exchange_declare(exchange="bar_plot_charts", exchange_type="fanout")
+    channel.queue_declare(queue="bar_plot_q", durable=True)
+
     channel.queue_bind(exchange="bar_plot_charts", queue="bar_plot_q")
 
     channel.basic_consume(queue="bar_plot_q", on_message_callback=callback_create_chart, auto_ack=True)

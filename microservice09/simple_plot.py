@@ -35,6 +35,9 @@ def main():
     connection = pika.BlockingConnection(pika.ConnectionParameters(os.environ.get("RABBIT_HOST"), os.environ.get("RABBIT_PORT"), "/"))
     channel = connection.channel()
 
+    channel.exchange_declare(exchange="simple_plot_charts", exchange_type="fanout")
+    channel.queue_declare(queue="simple_plot_q", durable=True)
+
     channel.queue_bind(exchange="simple_plot_charts", queue="simple_plot_q")
 
     channel.basic_consume(queue="simple_plot_q", on_message_callback=callback_create_chart, auto_ack=True)
