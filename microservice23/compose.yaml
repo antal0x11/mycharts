@@ -1,0 +1,39 @@
+services:
+  thor:
+    build:
+      context: .
+      dockerfile: Dockerfile.thor
+    depends_on:
+      database:
+        condition: service_healthy
+    networks:
+      mycharts-network:
+        ipv4_address: 10.0.1.171
+
+  proxy:
+    build:
+      context: .
+      dockerfile: Dockerfile.proxy
+    ports:
+      - "8120:80"
+    networks:
+      mycharts-network:
+        ipv4_address: 10.0.1.172
+
+  database:
+    build:
+      context: .
+      dockerfile: Dockerfile.database
+    healthcheck:
+      test: [ "CMD-SHELL", "mysqladmin ping -h localhost --silent" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    networks:
+      mycharts-network:
+        ipv4_address: 10.0.1.173
+
+networks:
+  mycharts-network:
+    external: true
+    name: mycharts-network

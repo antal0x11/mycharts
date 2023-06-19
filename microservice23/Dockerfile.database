@@ -1,0 +1,6 @@
+FROM mysql:latest
+ENV MYSQL_ROOT_PASSWORD password
+ENV MYSQL_DATABASE BAR_PLOT_CHARTS
+COPY ./config/init.sql /docker-entrypoint-initdb.d/
+VOLUME /var/lib/mysql
+EXPOSE 3306
