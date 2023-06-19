@@ -7,17 +7,17 @@ services:
       - proxy
     networks:
       mycharts-network:
-        ipv4_address: 10.0.1.21
+        ipv4_address: 10.0.1.141
 
   proxy:
     build:
       context: .
       dockerfile: Dockerfile.proxy
     ports:
-      - "80:80"
+      - "9100:80"
     networks:
       mycharts-network:
-        ipv4_address: 10.0.1.17
+        ipv4_address: 10.0.1.10
 
 networks:
   mycharts-network:

@@ -36,7 +36,20 @@ async function get_history(req, res, next){
         }
     }
 
-    //TODO add bar plot
+    try {
+        const bar_plot_res = await axios.get(`http://${process.env.MICROSERVICE13_IP_STORAGE_BAR}/api/storage/barplot/info/${user_id}`);
+        const data_bar_plot_res = bar_plot_res.data.charts;
+
+        if (data_bar_plot_res.length > 0) {
+            bucket_charts.push(...data_bar_plot_res);
+        }
+
+    } catch(error) {
+        if (error.code !== "ERR_BAD_REQUEST") {
+            console.error(error);
+        }
+    }
+
 
     if (bucket_charts.length > 0) {
         res.status(200).json(

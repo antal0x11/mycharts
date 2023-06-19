@@ -21,8 +21,23 @@ const upload = multer({storage : storage});
 
 function eval_body_params(req,res,next) {
 
-    //TODO evaluate body params
-    next();
+    next(); //FIX
+
+    // const required_fields = ["user_id", "info_", "title", "extension", "type"];
+    // const fields = Object.keys(req.body);
+    // let check_pass = true;
+
+    // for (let item of fields) {
+    //     if (!required_fields.includes(item)) {
+    //         check_pass = false;
+    //     }
+    // }
+    
+    // (check_pass) ? next() : res.status(400).json({
+    //     "info" : "fail",
+    //     "reason" : "invalid parameters"
+    // });
+    // cleanup();
 }
 
 function audit(req, res, next) {
@@ -30,7 +45,7 @@ function audit(req, res, next) {
     const reqFile = fs.createReadStream(`./uploads/${current_time_file_name}`);
 
     if (req.body.type === "simple_plot") {
-        axios.post("http://127.0.0.1:5000/api/data/integrity", {
+        axios.post(`http://${process.env.MICROSERVICE05_IP}/api/data/integrity`, {
             title: req.body.title,
             type: "simple_plot",
             extension: req.body.extension,
@@ -51,7 +66,7 @@ function audit(req, res, next) {
     } 
     
     if (req.body.type === "scatter_plot") {
-        axios.post("http://127.0.0.1:5000/api/data/integrity", {
+        axios.post(`http://${process.env.MICROSERVICE05_IP}/api/data/integrity`, {
             title: req.body.title,
             type: "scatter_plot",
             extension: req.body.extension,
@@ -70,7 +85,7 @@ function audit(req, res, next) {
     }
 
     if (req.body.type === "bar_plot") {
-        axios.post("http://127.0.0.1:5000/api/data/integrity", {
+        axios.post(`http://${process.env.MICROSERVICE05_IP}/api/data/integrity`, {
             title: req.body.title,
             type: "bar_plot",
             extension: req.body.extension,
@@ -103,10 +118,9 @@ function reduceCredit(req,res,next) {
     }).then((response) => {
         res.status(200).json(response.data);
     }).catch( (error) => {
-        console.error(error);
         res.status(500).json({
             "info" : "something broke"
-        });
+        })
     });
     next();
 }

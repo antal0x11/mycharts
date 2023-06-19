@@ -61,20 +61,23 @@ async function get_scatter_chart(req,res,next) {
 async function get_bar_chart(req,res,next) {
 
     if (req.params.bucketID === "barplot") {
-        try {
+        const chartID = req.params.chartID;
+        axios({
+            method : 'get',
+            url : `http://${process.env.MICROSERVICE13_IP_STORAGE_BAR}/api/storage/barplot/${chartID}`,
+            responseType : "stream"
+        }).then(response => {
+            response.data.pipe(res);
+        }).catch( error => {
 
-            const bar_res = await axios.get(`http://${process.env.MICROSERVICE11_IP_STORAGE_SCATTER}/api/storage/scatterplot/${req.params.chartID}`);
-           
-            res.status(bar_res.status).send(bar_res);
+            console.log(error);
 
-        } catch (error) {
-            console.error(error);
             res.status(500).json(
                 {
-                    "info" : "Something broke"
+                    "info" : "something broke"
                 }
             );
-        } 
+        })
     } else {
         next();
     }
