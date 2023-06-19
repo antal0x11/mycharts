@@ -22,6 +22,7 @@ function CreateChart() {
     const [fileDrag, setFileDrag] = useState(false);
     const [fileName,setFileName] = useState("");
     const [userID, setUserId] = useState(null);
+    const [credit, setCredit] = useState(0);
 
     useEffect(() => {
         getClientInfo();
@@ -30,7 +31,9 @@ function CreateChart() {
     function getClientInfo() {
         const info_ = sessionStorage.getItem("info_");
 
-        axios.post("http://localhost:7000/api/client/info", {
+        const url = `http://${import.meta.env.VITE_MAESTRO}/api/client/info`;
+
+        axios.post(url, {
             info_ : info_,
         }, {
             headers: {
@@ -39,9 +42,10 @@ function CreateChart() {
         }).then(response => {
             
             setUserId(response.data.userId);
+            setCredit(response.data.credit);
         
         }).catch(error => {
-            console.error(error);
+            //console.error(error);
         })
     }
 
@@ -75,6 +79,12 @@ function CreateChart() {
 
         event.preventDefault();
 
+        if (credit === 0) {
+            setVisibleNotification(true);
+            setNotification(9);
+            return;
+        }
+
        if (chartTitle === undefined || chartTitle === "" || chartTitle === " ") {
            setVisibleNotification(true);
            setNotification(1); // 1 -> if chart title is empty
@@ -106,10 +116,12 @@ function CreateChart() {
         }
 
         const info_ = sessionStorage.getItem("info_");
+
+        const url = `http://${import.meta.env.VITE_MAESTRO}/api/data/audit`;
         
         if (chartPlotType === "SimplePlot") {
 
-            axios.post("http://localhost:7000/api/data/audit", {
+            axios.post(url, {
                 user_id : userID,
                 info_ : info_,
                 title : chartTitle,
@@ -122,10 +134,12 @@ function CreateChart() {
                 headers : {
                     "Content-Type" : "multipart/form-data"
                 }
-            }).then( () => {
+            }).then( (res) => {
                 setVisibleNotification(true);
                 setNotification(5);
-            }).catch(() => {
+                setCredit((credit-1 > 0 ? credit - 1 : 0));
+            }).catch((error) => {
+                console.log(error);
                 setVisibleNotification(true);
                 setNotification(6);
             })
@@ -133,7 +147,7 @@ function CreateChart() {
 
         if (chartPlotType === "BarPlotWithLegend") {
 
-            axios.post("http://localhost:7000/api/data/audit", {
+            axios.post(url, {
                 user_id : userID,
                 info_ : info_,
                 title : chartTitle,
@@ -147,6 +161,7 @@ function CreateChart() {
             }).then( () => {
                 setVisibleNotification(true);
                 setNotification(5);
+                setCredit((credit-1 > 0 ? credit - 1 : 0));
             }).catch(() => {
                 setVisibleNotification(true);
                 setNotification(6);
@@ -155,7 +170,7 @@ function CreateChart() {
 
         if (chartPlotType === "ScatterPlot") {
 
-            axios.post("http://localhost:7000/api/data/audit", {
+            axios.post(url, {
                 user_id : userID,
                 info_ : info_,
                 title : chartTitle,
@@ -169,6 +184,7 @@ function CreateChart() {
             }).then( () => {
                 setVisibleNotification(true);
                 setNotification(5);
+                setCredit((credit-1 > 0 ? credit - 1 : 0));
             }).catch(() => {
                 setVisibleNotification(true);
                 setNotification(6);
@@ -247,6 +263,7 @@ function CreateChart() {
             <div>
 
                 <MenuBar page={"create-chart"} />
+                <h1 className="text-xl pl-2 sticky top-0">Available Charts:  {credit}</h1>
 
                 {visibleNotification && notification === 1 &&
                     <Notification notificationInfo={"errors"}
@@ -304,6 +321,13 @@ function CreateChart() {
                                   setVisibleNotification={setVisibleNotification}/>
                 }
 
+                {visibleNotification && notification === 9 &&
+                    <Notification notificationInfo={"errors"}
+                                  notificationTitle={"Not enough coins"}
+                                  notificationMsg={"You don't have enough coins to create a chart."}
+                                  setVisibleNotification={setVisibleNotification}/>
+                }
+
 
 
                 <div className="flex justify-center space-x-4">
@@ -339,7 +363,7 @@ function CreateChart() {
                                     onChange={handleChartExtension}>
                                 <option defaultValue={"Select File Format"}>Select File Format</option>
                                 <option value={"png"}>png</option>
-                                <option value={"html"}>html</option>
+                                <option value={"html"} disabled>html</option>
                                 <option value={"svg"}>svg</option>
                                 <option value={"pdf"}>pdf</option>
                             </select>

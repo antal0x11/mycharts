@@ -27,7 +27,11 @@ function Login() {
         };
 
         try {
-            const response = await fetch(import.meta.env.VITE_CLIENT_SESSION_CREATE, {
+            
+            const url = `http://${import.meta.env.VITE_MAESTRO}/api/client/session/init`;
+            //import.meta.env.VITE_CLIENT_SESSION_CREATE
+            
+            const response = await fetch(url, {
                 method: "POST",
                 headers: {
                     "Content-Type" : "application/json"
@@ -52,7 +56,10 @@ function Login() {
             return;
         }
 
-        fetch(import.meta.env.VITE_CLIENT_SESSION_STATUS, {
+        const url = `http://${import.meta.env.VITE_MAESTRO}/api/client/session/status`;
+        //import.meta.env.VITE_CLIENT_SESSION_STATUS
+
+        fetch(url, {
             method: "POST",
             headers: {
                 "Content-Type" : "application/json"

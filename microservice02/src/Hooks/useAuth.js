@@ -6,7 +6,11 @@ function useAuth() {
     useEffect(() => {
         const token = sessionStorage.getItem("token")
 
-        fetch(import.meta.env.VITE_CLIENT_SESSION_STATUS, {
+        const url = `http://${import.meta.env.VITE_MAESTRO}/api/client/session/status`;
+        //import.meta.env.VITE_CLIENT_SESSION_STATUS
+
+
+        fetch(url, {
             method: "POST",
             headers: {
                 "Content-Type" : "application/json"

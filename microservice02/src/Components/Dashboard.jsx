@@ -35,7 +35,10 @@ function Dashboard() {
         try {
             
             const bucket_chart = bucket.split(" ").join("").toLowerCase();
-            const res = await fetch(`http://${import.meta.env.VITE_MICROSERVICE06}/api/storage/${bucket_chart}/${_id}`);
+
+            const storage_url = `http://${import.meta.env.VITE_MAESTRO}/api/storage/${bucket_chart}/${_id}`;
+
+            const res = await fetch(storage_url);
             const imgBlob = await res.blob();
 
             let tp;
@@ -93,7 +96,10 @@ function Dashboard() {
         const bucket_chart = event.currentTarget.parentNode.getAttribute("data-bucket").split(" ").join("").toLowerCase();
         
         try {
-            const res = await fetch(`http://${import.meta.env.VITE_MICROSERVICE06}/api/storage/${bucket_chart}/${_id}`);
+
+            const dn_url = `http://${import.meta.env.VITE_MAESTRO}/api/storage/${bucket_chart}/${_id}`;
+
+            const res = await fetch(dn_url);
             const imgBlob = await res.blob();
             const url = URL.createObjectURL(imgBlob);
             const link = document.createElement('a');
@@ -121,7 +127,7 @@ function Dashboard() {
         const info_ = sessionStorage.getItem("info_");
 
         try {
-            const infoRes = await axios.post(`http://${import.meta.env.VITE_MICROSERVICE06}/api/client/info`, {
+            const infoRes = await axios.post(`http://${import.meta.env.VITE_MAESTRO}/api/client/info`, {
                 info_ : info_,
             }, {
                 headers: {
@@ -135,7 +141,7 @@ function Dashboard() {
             setEmail(infoRes.data.email);
             setChartsCreated(infoRes.data.charts);
 
-            const chartRes = await axios.get(`http://${import.meta.env.VITE_MICROSERVICE06}/api/storage/charts/info/${infoRes.data.userId}`);
+            const chartRes = await axios.get(`http://${import.meta.env.VITE_MAESTRO}/api/storage/charts/info/${infoRes.data.userId}`);
             let index = 0;
 
             const tbData = chartRes.data.charts.map(item => {
@@ -251,7 +257,7 @@ function Dashboard() {
 
             <div>
                 <MenuBar page={"dashboard"} />
-                {errorNotification && <Notification notificationInfo={"info"} notificationMsg={"Something Unexpected Occured"} notificationTitle={"Connectivity Issues"} setVisibleNotification={setErrorNotification}/>}
+                {chartsCreated > 0 && errorNotification && <Notification notificationInfo={"info"} notificationMsg={"Something Unexpected Occured"} notificationTitle={"Connectivity Issues"} setVisibleNotification={setErrorNotification}/>}
                 
                 <div>
                     <div className={"w-full bg-white"}>
@@ -284,8 +290,8 @@ function Dashboard() {
 
                 <div className={"mx-auto grid grid-cols-1 sm:grid-cols-2 justify-items-center flex space-x-4 border-t-2 border-black p-4"}>
 
-                    {loadingTable ? (
-                        <p>Loading...</p>
+                    {(loadingTable && chartsCreated === 0) ? (
+                        <p>No charts to show</p>
                     ) : (
   
                     <table

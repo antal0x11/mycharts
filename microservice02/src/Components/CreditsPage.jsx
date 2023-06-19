@@ -18,7 +18,9 @@ function CreditsPage() {
 
         const info_ = sessionStorage.getItem("info_");
 
-        axios.post("http://localhost:7000/api/client/info", {
+        const url = `http://${import.meta.env.VITE_MAESTRO}/api/client/info`;
+
+        axios.post(url, {
             info_ : info_
         }, {
             headers: {
@@ -44,7 +46,9 @@ function CreditsPage() {
         const info_ = sessionStorage.getItem("info_");
         const token = sessionStorage.getItem("token");
 
-        axios.post("http://localhost:7000/api/client/buy", {
+        const url = `http://${import.meta.env.VITE_MAESTRO}/api/client/buy`;
+
+        axios.post(url, {
             info_ : info_,
             token : token,
             credit : credit

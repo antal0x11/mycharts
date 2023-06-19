@@ -30,7 +30,11 @@ function MenuBar ({page, image}) {
         }
 
         try {
-            const response = await fetch(import.meta.env.VITE_CLIENT_SESSION_END, {
+
+            const url = `http://${import.meta.env.VITE_MAESTRO}/api/client/session/end`;
+            //import.meta.env.VITE_CLIENT_SESSION_END
+
+            const response = await fetch(url, {
                 method: "POST",
                 headers: {
                     "Content-Type" : "application/json"
