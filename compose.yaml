@@ -1,0 +1,292 @@
+services:
+
+# Microservice06 - Orchestrator
+
+  m06-maestro:
+    build:
+      context: ./microservice06
+      dockerfile: Dockerfile.maestro
+    depends_on:
+      - m06-proxy
+    networks:
+      mycharts-network:
+        ipv4_address: 10.0.1.141
+
+  m06-proxy:
+    build:
+      context: ./microservice06
+      dockerfile: Dockerfile.proxy
+    ports:
+      - "9100:80"
+    networks:
+      mycharts-network:
+        ipv4_address: 10.0.1.10
+
+# Microservice02 - Web User Interface
+
+  ui:
+    build: 
+      context: ./microservice02
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    networks:
+      mycharts-network:
+        ipv4_address: 10.0.1.196
+
+# Microservice03 - Clients Information (Quotas, etc.)
+
+  m03-database:
+    build:
+      context: ./microservice03
+      dockerfile: Dockerfile.database
+    healthcheck:
+      test: [ "CMD-SHELL", "mysqladmin ping -h localhost --silent" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    networks:
+      mycharts-network:
+        ipv4_address: 10.0.1.24
+
+  m03-lisa:
+    build:
+      context: ./microservice03
+      dockerfile: Dockerfile.lisa
+    depends_on:
+      m03-database:
+        condition: service_healthy
+    networks:
+      mycharts-network:
+        ipv4_address: 10.0.1.124
+
+  m03-proxy:
+    build:
+      context: ./microservice03
+      dockerfile: Dockerfile.proxy
+    networks:
+      mycharts-network:
+        ipv4_address: 10.0.1.21
+
+# Microservice07 - Authorization Server
+
+  m07-authserver:
+    build: 
+      context: ./microservice07
+      dockerfile: Dockerfile.authserver
+    depends_on:
+      - m07-redis
+      - m07-proxy
+    networks:
+      mycharts-network:
+        ipv4_address: 10.0.1.120
+
+  m07-redis:
+    build:
+      context: ./microservice07
+      dockerfile: Dockerfile.redis
+    networks:
+      mycharts-network:
+        ipv4_address: 10.0.1.15
+
+  m07-proxy:
+    build:
+      context: ./microservice07
+      dockerfile: Dockerfile.proxy
+    networks:
+      mycharts-network:
+        ipv4_address: 10.0.1.20
+
+# Microservice05 - File Integrity Check and Enqueue charts
+
+  m05-monica:
+    build: 
+      context: ./microservice05
+      dockerfile: Dockerfile.monica
+    networks:
+      mycharts-network:
+        ipv4_address: 10.0.1.19
+
+  m05-proxy:
+    build:
+      context: ./microservice05
+      dockerfile: Dockerfile.proxy
+    ports:
+      - 5050:80
+    networks:
+      mycharts-network:
+        ipv4_address: 10.0.1.8
+
+# RabbitMQ
+
+  rabbit:
+    image: rabbitmq:latest
+    ports:
+      - 5672:5672
+      - 15672:15672
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics","ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    networks:
+      mycharts-network:
+        ipv4_address: 10.0.1.100
+
+# Microservice09 - Simple Plot Creator
+
+  m09-anna:
+    build: 
+      context: ./microservice09
+      dockerfile: Dockerfile
+    depends_on:
+      rabbit:
+        condition: service_healthy
+      m05-monica:
+        condition: service_started
+    networks:
+      mycharts-network:
+        ipv4_address: 10.0.1.85
+
+# Microservice10 - Simple Plot Storage Server
+
+  m10-jane:
+    build:
+      context: ./microservice10
+      dockerfile: Dockerfile.jane
+    depends_on:
+      m10-database:
+        condition: service_healthy
+      rabbit:
+        condition: service_healthy
+    networks:
+      mycharts-network:
+        ipv4_address: 10.0.1.51
+
+  m10-proxy:
+    build:
+      context: ./microservice10
+      dockerfile: Dockerfile.proxy
+    networks:
+      mycharts-network:
+        ipv4_address: 10.0.1.52
+
+  m10-database:
+    build:
+      context: ./microservice10
+      dockerfile: Dockerfile.database
+    healthcheck:
+      test: [ "CMD-SHELL", "mysqladmin ping -h localhost --silent" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    networks:
+      mycharts-network:
+        ipv4_address: 10.0.1.110
+
+# Microservice11 - Scatter Plot Storage Server
+
+  m11-scarlet:
+    build:
+      context: ./microservice11
+      dockerfile: Dockerfile.scarlet
+    depends_on:
+      m11-database:
+        condition: service_healthy
+      rabbit:
+        condition: service_healthy
+    networks:
+      mycharts-network:
+        ipv4_address: 10.0.1.55
+
+  m11-proxy:
+    build:
+      context: ./microservice11
+      dockerfile: Dockerfile.proxy
+    networks:
+      mycharts-network:
+        ipv4_address: 10.0.1.54
+
+  m11-database:
+    build:
+      context: ./microservice11
+      dockerfile: Dockerfile.database
+    healthcheck:
+      test: [ "CMD-SHELL", "mysqladmin ping -h localhost --silent" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    networks:
+      mycharts-network:
+        ipv4_address: 10.0.1.113
+
+# Microservice08 - Scatter Plot Creator
+
+  kate:
+    build: 
+      context: ./microservice08
+      dockerfile: Dockerfile
+    depends_on:
+      rabbit:
+        condition: service_healthy
+      m05-monica:
+        condition: service_started
+    networks:
+      mycharts-network:
+        ipv4_address: 10.0.1.77
+
+# Microservice12 - Bar Plot Creator
+
+  tarzan:
+    build: 
+      context: ./microservice12
+      dockerfile: Dockerfile
+    depends_on:
+      rabbit:
+        condition: service_healthy
+      m05-monica:
+        condition: service_started
+    networks:
+      mycharts-network:
+        ipv4_address: 10.0.1.137
+
+# Microservice23 - Bar Plot Storage Server
+
+  m23-thor:
+    build:
+      context: ./microservice23
+      dockerfile: Dockerfile.thor
+    depends_on:
+      m23-database:
+        condition: service_healthy
+      rabbit:
+        condition: service_healthy
+    networks:
+      mycharts-network:
+        ipv4_address: 10.0.1.171
+
+  m23-proxy:
+    build:
+      context: ./microservice23
+      dockerfile: Dockerfile.proxy
+    networks:
+      mycharts-network:
+        ipv4_address: 10.0.1.172
+
+  m23-database:
+    build:
+      context: ./microservice23
+      dockerfile: Dockerfile.database
+    healthcheck:
+      test: [ "CMD-SHELL", "mysqladmin ping -h localhost --silent" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    networks:
+      mycharts-network:
+        ipv4_address: 10.0.1.173
+  
+networks:
+  mycharts-network:
+    external: true
+    name: mycharts-network
