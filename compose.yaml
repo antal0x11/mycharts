@@ -1,5 +1,21 @@
 services:
 
+# RabbitMQ
+
+  rabbit:
+    image: rabbitmq:latest
+    ports:
+      - 5672:5672
+      - 15672:15672
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics","ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    networks:
+      mycharts-network:
+        ipv4_address: 10.0.1.100
+
 # Microservice06 - Orchestrator
 
   m06-maestro:
@@ -117,22 +133,6 @@ services:
       mycharts-network:
         ipv4_address: 10.0.1.8
 
-# RabbitMQ
-
-  rabbit:
-    image: rabbitmq:latest
-    ports:
-      - 5672:5672
-      - 15672:15672
-    healthcheck:
-      test: ["CMD", "rabbitmq-diagnostics","ping"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
-    networks:
-      mycharts-network:
-        ipv4_address: 10.0.1.100
-
 # Microservice09 - Simple Plot Creator
 
   m09-anna:
@@ -147,6 +147,7 @@ services:
     networks:
       mycharts-network:
         ipv4_address: 10.0.1.85
+    restart: always
 
 # Microservice10 - Simple Plot Storage Server
 
@@ -234,6 +235,7 @@ services:
     networks:
       mycharts-network:
         ipv4_address: 10.0.1.77
+    restart: always
 
 # Microservice12 - Bar Plot Creator
 
@@ -249,6 +251,7 @@ services:
     networks:
       mycharts-network:
         ipv4_address: 10.0.1.137
+    restart: always
 
 # Microservice23 - Bar Plot Storage Server
 
