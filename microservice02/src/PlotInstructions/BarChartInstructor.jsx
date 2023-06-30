@@ -12,14 +12,8 @@ function BarChartInstructor({hideChart, title}) {
                 className={"list-disc pl-4 text-justify text-ellipsis whitespace-normal break-keep tracking-wide"}>
                 <li className={"pt-2"}> Login with your Google Account. </li>
                 <li className={"pt-2"}> Create a csv file with your data. </li>
-                <li className={"pt-2"}> Create a json file with your chart attributes. </li>
-                <li className={"pt-2"}> Upload your files to the form and your chart will be crafted. </li>
+                <li className={"pt-2"}> Upload your file to the form and your chart will be crafted. </li>
             </ul>
-
-            <p
-                className={"mt-2 italic text-center text-sm"}>
-                *CSV and JSON prototypes for {title} chart can be found here. {/*TODO ADD link for prototypes*/}
-            </p>
 
             <div className={"flex space-x-4"}>
                 <button
