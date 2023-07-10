@@ -49,12 +49,3 @@ docker compose up
 ## Notes
 
 MyCharts is a school project. This project contains .env files with basic configuration.
-
-
-
-
-
-
-  
-  
-  
