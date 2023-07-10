@@ -20,10 +20,13 @@ A Visual Paradigm File can be found [here](/architecture/).
 * Python 3.10.8
 
 ## Installation
+```
 
-* ./init.sh
-* docker network create --subnet=10.0.1.0/24 mycharts-network (skip if already exists)
-* docker compose up
+./init.sh
+docker network create --subnet=10.0.1.0/24 mycharts-network (skip if already exists)
+docker compose up
+
+```
 
 ## Technologies and Frameworks used in this project
 
@@ -45,7 +48,7 @@ A Visual Paradigm File can be found [here](/architecture/).
 
 ## Notes
 
-This project contains .env files with basic configuration.
+MyCharts is a school project. This project contains .env files with basic configuration.
 
 
 
