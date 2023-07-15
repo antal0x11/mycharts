@@ -82,3 +82,6 @@ out/
 
 ### MICROSERVICE03 ###
 microservice03/data
+
+
+/microservice02/.env
